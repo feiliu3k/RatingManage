@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="row page-title-row">
         <div class="col-md-12">
-            <h3>收视率类型 <small>» 编辑</small></h3>
+            <h3>广告播出单 <small>» 编辑</small></h3>
         </div>
     </div>
 
@@ -19,14 +19,14 @@
                     @include('admin.partials.errors')
                     @include('admin.partials.success')
 
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/ratingtype').'/'. $id }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/adplaylist').'/'. $fields['id'] }}">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="_method" value="PUT">
-                        <input type="hidden" name="id" value="{{ $id }}">
+                        <input type="hidden" name="id" value="{{ $fields['id'] }}">
 
 
 
-                        @include('admin.ratingtype._form')
+                        @include('admin.adplaylist._modals')
 
                         <div class="form-group">
                             <div class="col-md-7 col-md-offset-3">
@@ -63,11 +63,11 @@
             <div class="modal-body">
                 <p class="lead">
                     <i class="fa fa-question-circle fa-lg"></i>
-                    你是否要删除此收视率类型?
+                    你是否要删除此广告播出记录?
                 </p>
             </div>
             <div class="modal-footer">
-                <form method="POST" action="{{ url('/admin/ratingtype').'/'.$id }}">
+                <form method="POST" action="{{ url('/admin/adplaylist').'/'.$fields['id'] }}">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="_method" value="DELETE">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>

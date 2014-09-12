@@ -25,8 +25,8 @@ class RatingListController extends Controller
     protected $fieldList = [
         's_date'=>'',
         'f_id'=>1,
-        'b_time'=>'00:00',
-        'e_time'=>'00:00',
+        'b_time'=>'08:00',
+        'e_time'=>'08:15',
         'rt_id'=>1,
         'a_rating'=>0.0
     ];
@@ -35,8 +35,8 @@ class RatingListController extends Controller
         'b_date'=>'',
         'e_date'=>'',
         'f_id'=>0,
-        'b_time'=>'00:00',
-        'e_time'=>'00:00',
+        'b_time'=>'08:00',
+        'e_time'=>'08:15',
         'rt_id'=>0
     ];
 
@@ -57,6 +57,7 @@ class RatingListController extends Controller
      */
     public function index()
     {
+        $searchflag=false;
         $fres= Fre::all();
         $ratingTypes= RatingType::all();
 
@@ -65,9 +66,9 @@ class RatingListController extends Controller
         $searchCondition=$this->_searchCondition;
         $searchCondition['b_date'] =Carbon::now()->toDateString();
         $searchCondition['e_date'] =Carbon::now()->addDay(7)->toDateString();
-        $ratings = Rating::orderBy('id', 'desc')
+        $ratings = Rating::orderBy('s_date', 'desc')->orderBy('b_time', 'desc')
                 ->paginate(config('rating.posts_per_page'));
-        return view('admin.ratinglist.index',compact('ratings', 'fres', 'ratingTypes','fields','searchCondition'));
+        return view('admin.ratinglist.index',compact('ratings', 'fres', 'ratingTypes','fields','searchCondition', 'searchflag'));
     }
 
 
@@ -232,6 +233,7 @@ class RatingListController extends Controller
      */
     public function search(Request $request)
     {
+        $searchflag=true;
         $fres= Fre::all();
         $ratingTypes= RatingType::all();
 
@@ -255,14 +257,14 @@ class RatingListController extends Controller
             $ratings = Rating::whereBetween('s_date', [$searchCondition['b_date'], $searchCondition['e_date']])
                             ->where('b_time','>=',$searchCondition['b_time'])
                             ->where('e_time','<=',$searchCondition['e_time'])
-                            ->where('rt_id',$searchCondition['rt_id'])
+                            ->where('f_id',$searchCondition['f_id'])
                             ->orderBy('id', 'desc')
                             ->paginate(config('rating.posts_per_page'));
         } else if ($searchCondition['f_id']==0){
             $ratings = Rating::whereBetween('s_date', [$searchCondition['b_date'], $searchCondition['e_date']])
                             ->where('b_time','>=',$searchCondition['b_time'])
                             ->where('e_time','<=',$searchCondition['e_time'])
-                            ->where('f_id',$searchCondition['f_id'])
+                            ->where('rt_id',$searchCondition['rt_id'])
                             ->orderBy('id', 'desc')
                             ->paginate(config('rating.posts_per_page'));
         } else {
@@ -275,7 +277,7 @@ class RatingListController extends Controller
                             ->paginate(config('rating.posts_per_page'));
         }
 
-        return view('admin.ratinglist.index',compact('ratings', 'fres', 'ratingTypes','fields','searchCondition'));
+        return view('admin.ratinglist.index',compact('ratings', 'fres', 'ratingTypes','fields','searchCondition', 'searchflag'));
     }
 
     /**
@@ -283,6 +285,43 @@ class RatingListController extends Controller
      */
     public function deleteByCondition(Request $request)
     {
+
+        foreach (array_keys($this->_searchCondition) as $field) {
+            $searchCondition[$field] = $request->get($field);
+        }
+
+        $ratings=null;
+
+        if (($searchCondition['rt_id']==0) and ($searchCondition['f_id']==0)){
+            $ratings = Rating::whereBetween('s_date', [$searchCondition['b_date'], $searchCondition['e_date']])
+                            ->where('b_time','>=',$searchCondition['b_time'])
+                            ->where('e_time','<=',$searchCondition['e_time'])
+                            ->delete();
+        } else if ($searchCondition['rt_id']==0) {
+            $ratings = Rating::whereBetween('s_date', [$searchCondition['b_date'], $searchCondition['e_date']])
+                            ->where('b_time','>=',$searchCondition['b_time'])
+                            ->where('e_time','<=',$searchCondition['e_time'])
+                            ->where('f_id',$searchCondition['f_id'])
+                            ->delete();
+        } else if ($searchCondition['f_id']==0){
+            $ratings = Rating::whereBetween('s_date', [$searchCondition['b_date'], $searchCondition['e_date']])
+                            ->where('b_time','>=',$searchCondition['b_time'])
+                            ->where('e_time','<=',$searchCondition['e_time'])
+                            ->where('rt_id',$searchCondition['rt_id'])
+                            ->delete();
+        } else {
+            $ratings = Rating::whereBetween('s_date', [$searchCondition['b_date'], $searchCondition['e_date']])
+                            ->where('b_time','>=',$searchCondition['b_time'])
+                            ->where('e_time','<=',$searchCondition['e_time'])
+                            ->where('rt_id',$searchCondition['rt_id'])
+                            ->where('f_id',$searchCondition['f_id'])
+                            ->delete();
+        }
+
+
+
+        return redirect('/admin/ratinglist')
+                        ->withSuccess("收视率导入成功.");
 
     }
 }

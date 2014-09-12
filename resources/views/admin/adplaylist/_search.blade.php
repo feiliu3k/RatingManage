@@ -51,31 +51,18 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="file_name" class="col-sm-3 control-label">
-            收视率类型
+        <label for="number" class="col-sm-3 control-label">
+            合同号
         </label>
-        <div class="col-sm-8">
-            <select name="rt_id" id="rt_id" class="form-control" >
-            @if ($searchCondition['rt_id']==0)
-                <option value="0" selected="selected">
-                    全选
-                </option>
-            @else
-                <option value="0" >
-                    全选
-                </option>
-            @endif
-            @foreach ($ratingTypes as $ratingType)
-                @if ($searchCondition['rt_id']==$ratingType->id)
-                    <option value="{{ $ratingType->id }} " selected="selected">
-                         {{ $ratingType->rating_type }}
-                    </option>
-                @else
-                    <option value="{{ $ratingType->id }} ">
-                         {{ $ratingType->rating_type }}
-                    </option>
-                @endif
-            @endforeach
-            </select>
+        <div class="col-sm-4">
+            <input type="text" id="number" name="number" class="form-control" value="{{ $fields['number'] }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="content" class="col-sm-3 control-label">
+            广告内容
+        </label>
+        <div class="col-sm-4">
+            <input type="text" id="content" name="content" class="form-control" value="{{ $fields['content'] }}">
         </div>
     </div>

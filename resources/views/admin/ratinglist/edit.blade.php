@@ -63,7 +63,7 @@
             <div class="modal-body">
                 <p class="lead">
                     <i class="fa fa-question-circle fa-lg"></i>
-                    你是否要删除此频道?
+                    你是否要删除此收视率数据?
                 </p>
             </div>
             <div class="modal-footer">

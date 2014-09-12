@@ -9,25 +9,25 @@
     <div class="container-fluid">
         <div class="row page-title-row">
             <div class="col-md-6">
-                <h3>收视率 <small>» 列表</small></h3>
+                <h3>广告播出单 <small>» 列表</small></h3>
             </div>
 
             <div class="col-md-6 text-right">
 
-                <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#modal-rating-create">
-                    <i class="fa fa-upload"></i> 新建收视率
+                <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#modal-adplaylist-create">
+                    <i class="fa fa-upload"></i> 新建广告播出单
                 </button>
 
-                <a href="{{ url('/admin/ratinglist/fileexplorer') }}" class="btn btn-info btn-md">
-                    <i class="fa fa-plus-circle"></i> 导入收视率
+                <a href="{{ url('/admin/adplaylist/fileexplorer') }}" class="btn btn-info btn-md">
+                    <i class="fa fa-plus-circle"></i> 导入广告播出单
                 </a>
 
-                <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#modal-rating-search">
-                    <i class="fa fa-plus-circle"></i> 搜索收视率
+                <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#modal-adplaylist-search">
+                    <i class="fa fa-plus-circle"></i> 搜索广告播出单
                 </button>
                 @if ($searchflag)
-                <button type="button" class="btn btn-danger btn-md" data-toggle="modal" data-target="#modal-rating-deletebycondition">
-                    <i class="fa fa-plus-circle"></i> 删除收视率
+                <button type="button" class="btn btn-danger btn-md" data-toggle="modal" data-target="#modal-adplaylist-deletebycondition">
+                    <i class="fa fa-plus-circle"></i> 删除广告播出单
                 </button>
                 @endif
 
@@ -43,28 +43,30 @@
                 <table class="table table-striped table-bordered">
                     <thead>
                         <tr>
-                            <th>编号</th>
-                            <th>日期</th>
+                            <th>播出日期</th>
+                            <th>播出时间</th>
                             <th>频道</th>
-                            <th>开始时间</th>
-                            <th>结束时间</th>
-                            <th>收视率类型</th>
-                            <th>收视率</th>
+                            <th>合同号</th>
+                            <th>实际长度</th>
+                            <th>广告内容</th>
+                            <th>带号</th>
+                            <th>广告长度</th>
                             <th data-sortable="false">操作</th>
                         </tr>
                      </thead>
                     <tbody>
-                    @foreach ($ratings as $rating)
+                    @foreach ($adplaylists as $adplaylist)
                         <tr>
-                            <td>{{ $rating->id }}</td>
-                            <td>{{ $rating->s_date }}</td>
-                            <th>{{ $rating->fre->fre }}</th>
-                            <th>{{ $rating->b_time }}</th>
-                            <th>{{ $rating->e_time }}</th>
-                            <th>{{ $rating->ratingType->rating_type }}</th>
-                            <th>{{ $rating->a_rating }}</th>
+                            <td>{{ $adplaylist->d_date }}</td>
+                            <td>{{ $adplaylist->b_time }}</td>
+                            <th>{{ $adplaylist->fre->fre }}</th>
+                            <th>{{ $adplaylist->number }}</th>
+                            <th>{{ $adplaylist->len }}</th>
+                            <th>{{ $adplaylist->content }}</th>
+                            <th>{{ $adplaylist->belt }}</th>
+                            <th>{{ $adplaylist->ht_len }}</th>
                             <td>
-                                <a href="{{ url('/admin/ratinglist').'/'.$rating->id.'/edit' }}" class="btn btn-xs btn-info">
+                                <a href="{{ url('/admin/adplaylist').'/'.$adplaylist->id.'/edit' }}" class="btn btn-xs btn-info">
                                     <i class="fa fa-edit"></i> 编辑
                                 </a>
                             </td>
@@ -75,16 +77,17 @@
 
 
                 <div class="pull-right">
-                    @if ($searchflag){!! $ratings->appends([
+                    @if ($searchflag){!! $adplaylists->appends([
                         'b_date' => $searchCondition['b_date'],
                         'e_date' => $searchCondition['e_date'],
                         'f_id' => $searchCondition['f_id'],
-                        'rt_id' => $searchCondition['rt_id'],
                         'b_time' => $searchCondition['b_time'],
                         'e_time' => $searchCondition['e_time'],
+                        'number' => $searchCondition['number'],
+                        'content' => $searchCondition['content'],
                         ])->render() !!}
                     @else
-                        {!! $ratings->render() !!}
+                        {!! $adplaylists->render() !!}
                     @endif
                 </div>
 
@@ -93,10 +96,10 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-rating-create">
+    <div class="modal fade" id="modal-adplaylist-create">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="POST" action="{{ url('/admin/ratinglist') }}" class="form-horizontal" >
+                <form method="POST" action="{{ url('/admin/adplaylist') }}" class="form-horizontal" >
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
@@ -105,7 +108,7 @@
                         <h4 class="modal-title">新建收视率</h4>
                     </div>
                     <div class="modal-body">
-                        @include('admin.ratinglist._modals')
+                        @include('admin.adplaylist._modals')
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">
@@ -120,10 +123,10 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-rating-search">
+    <div class="modal fade" id="modal-adplaylist-search">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="get" action="{{ url('/admin/ratinglist/search') }}" class="form-horizontal" >
+                <form method="get" action="{{ url('/admin/adplaylist/search') }}" class="form-horizontal" >
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
@@ -132,7 +135,7 @@
                         <h4 class="modal-title">搜索收视率</h4>
                     </div>
                     <div class="modal-body">
-                        @include('admin.ratinglist._search')
+                        @include('admin.adplaylist._search')
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">
@@ -147,10 +150,10 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-rating-deletebycondition">
+    <div class="modal fade" id="modal-adplaylist-deletebycondition">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="post" action="{{ url('/admin/ratinglist/deletebycondition') }}" class="form-horizontal" >
+                <form method="post" action="{{ url('/admin/adplaylist/deletebycondition') }}" class="form-horizontal" >
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
@@ -159,7 +162,7 @@
                         <h4 class="modal-title">删除收视率</h4>
                     </div>
                     <div class="modal-body">
-                        @include('admin.ratinglist._search')
+                        @include('admin.adplaylist._search')
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">
