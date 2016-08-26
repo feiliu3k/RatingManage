@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRatingTypesTable extends Migration
+class CreateFresTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,12 @@ class CreateRatingTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('ratingtypes', function (Blueprint $table) {
+        Schema::create('fres', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('rating_type');
+            $table->string('fre');
+            $table->string('dm');
             $table->string('remark');
+            $table->string('xs');
         });
     }
 
@@ -26,6 +28,6 @@ class CreateRatingTypesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('ratingtypes');
+        Schema::drop('fres');
     }
 }

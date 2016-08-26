@@ -12,9 +12,11 @@ class CreateStatListsTable extends Migration
      */
     public function up()
     {
-        Schema::create('stat_lists', function (Blueprint $table) {
+        Schema::create('statlists', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
+            $table->string('statname');
+            $table->integer('r_id');
+            $table->integer('a_id');
         });
     }
 
@@ -25,6 +27,6 @@ class CreateStatListsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('stat_lists');
+        Schema::drop('statlists');
     }
 }

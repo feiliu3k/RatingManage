@@ -4,12 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class StatList extends Model
+class Fre extends Model
 {
-    protected $table = 'statlists';
+    protected $table = 'fres';
     protected $primaryKey='id';
 
     protected $fillable = [
-              'statname', 'r_id', 'a_id'
-            ];
+        'fre', 'dm', 'remark', 'xs'
+    ];
+
 }

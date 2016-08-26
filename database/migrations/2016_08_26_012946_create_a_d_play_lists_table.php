@@ -12,9 +12,16 @@ class CreateADPlayListsTable extends Migration
      */
     public function up()
     {
-        Schema::create('a_d_play_lists', function (Blueprint $table) {
+        Schema::create('adplaylists', function (Blueprint $table) {
             $table->increments('id');
-            $table->timestamps();
+            $table->datetime('d_date');
+            $table->string('b_time');
+            $table->integer('f_id');
+            $table->string('number');
+            $table->string('len');
+            $table->string('content');
+            $table->string('belt');
+            $table->string('ht_len');
         });
     }
 
@@ -25,6 +32,6 @@ class CreateADPlayListsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('a_d_play_lists');
+        Schema::drop('adplaylists');
     }
 }
