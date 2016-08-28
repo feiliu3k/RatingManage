@@ -8,6 +8,7 @@ class ADPlayList extends Model
 {
     protected $table = 'adplaylists';
     protected $primaryKey='id';
+    public $timestamps = false;
 
     protected $fillable = [
               'd_date', 'b_time', 'f_id', 'number', 'len', 'content','belt','ht_len'

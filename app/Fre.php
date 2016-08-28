@@ -8,6 +8,7 @@ class Fre extends Model
 {
     protected $table = 'fres';
     protected $primaryKey='id';
+    public $timestamps = false;
 
     protected $fillable = [
         'fre', 'dm', 'remark', 'xs'

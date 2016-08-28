@@ -87,7 +87,7 @@ class FreController extends Controller
         $fre = Fre::findOrFail($id);
         $data = ['id' => $id];
         foreach (array_keys($this->fields) as $field) {
-            $data[$field] = old($field, $tag->$field);
+            $data[$field] = old($field, $fre->$field);
         }
 
         return view('admin.fre.edit', $data);
