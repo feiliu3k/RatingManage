@@ -15,13 +15,14 @@ class CreateRatingsTable extends Migration
         Schema::create('ratings', function (Blueprint $table) {
             $table->increments('id');
             $table->datetime('s_date');
-            $table->integer('f_id');
+            $table->integer('f_id')->unsigned()->index();
             $table->string('b_time');
             $table->string('e_time');
-            $table->string('e_time')
-            $table->integer('rt_id');
-            $table->float('a_rating');
+            $table->integer('rt_id')->unsigned()->index();
+            $table->float('a_rating',8,3);
         });
+
+
     }
 
     /**

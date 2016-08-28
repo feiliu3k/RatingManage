@@ -12,9 +12,19 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+
+    return redirect('admin/fre');
+
 });
 
 Route::auth();
 
-Route::get('/home', 'HomeController@index');
+
+Route::group(['namespace'=>'Admin','middleware'=>'auth'],function(){
+    Route::resource('admin/fre', 'FreController', ['except' => 'show']);
+    Route::resource('admin/ratingtype', 'RatingTypeController');
+});
+
+Route::get('login','Auth\AuthController@showLoginForm');
+Route::post('login','Auth\AuthController@login');
+Route::get('logout','Auth\AuthController@logout');

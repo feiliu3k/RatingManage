@@ -14,9 +14,9 @@ class CreateStatListsTable extends Migration
     {
         Schema::create('statlists', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('statname');
-            $table->integer('r_id');
-            $table->integer('a_id');
+            $table->string('statname')->unique();
+            $table->integer('r_id')->unsigned()->index();
+            $table->integer('a_id')->unsigned()->index();
         });
     }
 

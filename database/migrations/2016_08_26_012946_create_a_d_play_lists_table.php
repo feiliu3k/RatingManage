@@ -16,7 +16,7 @@ class CreateADPlayListsTable extends Migration
             $table->increments('id');
             $table->datetime('d_date');
             $table->string('b_time');
-            $table->integer('f_id');
+            $table->integer('f_id')->unsigned()->index();
             $table->string('number');
             $table->string('len');
             $table->string('content');

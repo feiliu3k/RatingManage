@@ -14,7 +14,7 @@ class CreateRatingTypesTable extends Migration
     {
         Schema::create('ratingtypes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('rating_type');
+            $table->string('rating_type')->unique();
             $table->string('remark');
         });
     }

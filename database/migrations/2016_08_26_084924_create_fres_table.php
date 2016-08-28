@@ -14,7 +14,7 @@ class CreateFresTable extends Migration
     {
         Schema::create('fres', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('fre');
+            $table->string('fre')->unique();
             $table->string('dm');
             $table->string('remark');
             $table->string('xs');
