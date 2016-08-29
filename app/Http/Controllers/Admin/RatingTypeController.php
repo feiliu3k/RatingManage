@@ -7,8 +7,17 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Http\Requests\RatingTypeCreateRequest;
+use App\Http\Requests\RatingTypeUpdateRequest;
+use App\RatingType;
+
+
 class RatingTypeController extends Controller
 {
+    protected $fields = [
+        'rating_type' => '',
+        'remark' => '',
+    ];
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +25,8 @@ class RatingTypeController extends Controller
      */
     public function index()
     {
-        //
+        $ratingTypes= RatingType::all();
+        return view('admin.ratingType.index',compact('ratingTypes'));
     }
 
     /**
@@ -26,7 +36,12 @@ class RatingTypeController extends Controller
      */
     public function create()
     {
-        //
+        $data = [];
+        foreach ($this->fields as $field => $default) {
+            $data[$field] = old($field, $default);
+        }
+
+        return view('admin.ratingtype.create', $data);
     }
 
     /**
@@ -37,19 +52,17 @@ class RatingTypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $ratingType = new RatingType();
+        foreach (array_keys($this->fields) as $field) {
+            $ratingType->$field = $request->get($field);
+        }
+        $ratingType->save();
+
+        return redirect('/admin/ratingtype')
+                        ->withSuccess("收视率类型 '$ratingType->rating_type' 新建完成.");
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -59,7 +72,13 @@ class RatingTypeController extends Controller
      */
     public function edit($id)
     {
-        //
+        $ratingType = RatingType::findOrFail($id);
+        $data = ['id' => $id];
+        foreach (array_keys($this->fields) as $field) {
+            $data[$field] = old($field, $ratingType->$field);
+        }
+
+        return view('admin.ratingtype.edit', $data);
     }
 
     /**
@@ -71,7 +90,15 @@ class RatingTypeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $ratingType = RatingType::findOrFail($id);
+
+        foreach (array_keys($this->fields) as $field) {
+            $ratingType->$field = $request->get($field);
+        }
+        $ratingType->save();
+
+        return redirect("/admin/ratingtype/$id/edit")
+                        ->withSuccess("收视率类型更新成功.");
     }
 
     /**
@@ -82,6 +109,10 @@ class RatingTypeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $ratingType = RatingType::findOrFail($id);
+        $ratingType->delete();
+
+        return redirect('/admin/ratingtype')
+                        ->withSuccess("收视率类型 '$ratingType->rating_type' 删除成功.");
     }
 }

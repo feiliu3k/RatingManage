@@ -4,6 +4,9 @@
         <li @if (Request::is('admin/fre*')) class="active" @endif>
             <a href="{{ url('/admin/fre') }}">频道</a>
         </li>
+        <li @if (Request::is('admin/ratingtype*')) class="active" @endif>
+            <a href="{{ url('/admin/ratingtype') }}">收视率类型</a>
+        </li>
         <li @if (Request::is('admin/upload*')) class="active" @endif>
             <a href="{{ url('/admin/upload') }}">上传</a>
         </li>

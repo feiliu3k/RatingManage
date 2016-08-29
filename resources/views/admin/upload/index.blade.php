@@ -48,7 +48,7 @@
                 @foreach ($subfolders as $path => $name)
                     <tr>
                         <td>
-                            <a href="url('/admin/upload?folder=').$path }}">
+                            <a href="{{ url('/admin/upload?folder=').$path }}">
                                 <i class="fa fa-folder fa-lg fa-fw"></i>
                                 {{ $name }}
                             </a>
@@ -90,6 +90,13 @@
                                 <button type="button" class="btn btn-xs btn-success" onclick="preview_image('{{ $file['webPath'] }}')">
                                     <i class="fa fa-eye fa-lg"></i>
                                     预览
+                                </button>
+                            @endif
+
+                            @if (is_excelfile($file['mimeType']))
+                                <button type="button" class="btn btn-xs btn-success" onclick="import('{{ $file['webPath'] }}')">
+                                    <i class="fa fa-load fa-lg"></i>
+                                    导入
                                 </button>
                             @endif
                         </td>

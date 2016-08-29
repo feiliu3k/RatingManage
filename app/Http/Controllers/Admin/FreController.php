@@ -15,7 +15,7 @@ class FreController extends Controller
 {
 
 
-     protected $fields = [
+    protected $fields = [
         'fre' => '',
         'dm' => '',
         'remark' => '',
@@ -65,16 +65,6 @@ class FreController extends Controller
                         ->withSuccess("频道 '$fre->fre' 新建完成.");
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.

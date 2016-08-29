@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="row page-title-row">
         <div class="col-md-12">
-            <h3>频道 <small>» 新建</small></h3>
+            <h3>收视率类型 <small>» 新建</small></h3>
         </div>
     </div>
 
@@ -18,10 +18,10 @@
 
                     @include('admin.partials.errors')
 
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/fre') }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/ratingtype') }}">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-                            @include('admin.fre._form')
+                            @include('admin.ratingtype._form')
 
                             <div class="form-group">
                                 <div class="col-md-7 col-md-offset-3">
@@ -31,9 +31,7 @@
                                     </button>
                                 </div>
                             </div>
-
                         </form>
-
                 </div>
              </div>
         </div>

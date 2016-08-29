@@ -39,7 +39,7 @@ class UploadController extends Controller
     {
         $new_folder = $request->get('new_folder');
         $folder = $request->get('folder').'/'.$new_folder;
-
+        $folder = urlencode($folder);
         $result = $this->manager->createDirectory($folder);
 
         if ($result === true) {
