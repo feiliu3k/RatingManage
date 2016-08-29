@@ -12,17 +12,19 @@
 */
 
 Route::get('/', function () {
-
     return redirect('admin/fre');
-
 });
-
-Route::auth();
-
 
 Route::group(['namespace'=>'Admin','middleware'=>'auth'],function(){
     Route::resource('admin/fre', 'FreController', ['except' => 'show']);
-    Route::resource('admin/ratingtype', 'RatingTypeController');
+    Route::resource('admin/ratingtype', 'RatingTypeController', ['except' => 'show']);
+
+    Route::get('admin/upload', 'UploadController@index');
+    Route::post('admin/upload/file', 'UploadController@uploadFile');
+    Route::delete('admin/upload/file', 'UploadController@deleteFile');
+    Route::post('admin/upload/folder', 'UploadController@createFolder');
+    Route::delete('admin/upload/folder', 'UploadController@deleteFolder');
+
 });
 
 Route::get('login','Auth\AuthController@showLoginForm');
