@@ -25,7 +25,12 @@ Route::group(['namespace'=>'Admin','middleware'=>'auth'],function(){
     Route::post('admin/upload/folder', 'UploadController@createFolder');
     Route::delete('admin/upload/folder', 'UploadController@deleteFolder');
 
+    Route::get('excel/export','ExcelController@export');
+    Route::get('excel/import','ExcelController@import');
+
 });
+
+
 
 Route::get('login','Auth\AuthController@showLoginForm');
 Route::post('login','Auth\AuthController@login');

@@ -148,6 +148,7 @@ class UploadsManager
     {
         $folder = $this->cleanFolder($folder);
 
+
         if ($this->disk->exists($folder)) {
             return "目录 '$folder' 已经存在.";
         }
