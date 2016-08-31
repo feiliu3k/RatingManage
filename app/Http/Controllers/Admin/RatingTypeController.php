@@ -18,6 +18,7 @@ class RatingTypeController extends Controller
         'rating_type' => '',
         'remark' => '',
     ];
+
     /**
      * Display a listing of the resource.
      *

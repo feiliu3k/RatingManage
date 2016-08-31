@@ -40,13 +40,6 @@ class ExcelController extends Controller
     }
 
     //Excel文件导入功能 By Laravel学院
-public function import(){
-    $filePath = 'public/uploads/2016/'.'3.xls';
-    Excel::selectSheets('Sheet1')->load($filePath, function($reader) {
-        $reader->noHeading();
-        $data = $reader->toArray();
-        dd($data[0],$data[1],$data[3]);
-    });
-}
+
 
 }

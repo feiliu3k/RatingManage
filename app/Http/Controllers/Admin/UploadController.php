@@ -4,9 +4,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Services\UploadsManager;
 use Illuminate\Http\Request;
 
+use App\Services\UploadsManager;
 use App\Http\Requests\UploadFileRequest;
 use App\Http\Requests\UploadNewFolderRequest;
 use Illuminate\Support\Facades\File;
