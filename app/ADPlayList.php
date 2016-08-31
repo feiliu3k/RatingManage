@@ -13,4 +13,11 @@ class ADPlayList extends Model
     protected $fillable = [
               'd_date', 'b_time', 'f_id', 'number', 'len', 'content','belt','ht_len'
             ];
+
+    public function fre()
+    {
+        return $this->belongsTo('App\Fre','f_id','id');
+    }
+
+
 }

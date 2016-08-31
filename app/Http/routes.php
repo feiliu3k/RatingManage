@@ -19,7 +19,10 @@ Route::group(['namespace'=>'Admin','middleware'=>'auth'],function(){
     Route::resource('admin/fre', 'FreController', ['except' => 'show']);
     Route::resource('admin/ratingtype', 'RatingTypeController', ['except' => 'show']);
 
+    Route::get('admin/ratinglist/search', 'RatingListController@search');
+    Route::post('admin/ratinglist/deletebycondition', 'RatingListController@deleteByCondition');
     Route::get('admin/ratinglist/fileexplorer', 'RatingListController@fileExplorer');
+    Route::post('admin/ratinglist/import', 'RatingListController@import');
     Route::resource('admin/ratinglist', 'RatingListController');
 
     Route::get('admin/upload', 'UploadController@index');

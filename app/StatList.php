@@ -12,4 +12,6 @@ class StatList extends Model
     protected $fillable = [
               'statname', 'r_id', 'a_id'
             ];
+
+
 }

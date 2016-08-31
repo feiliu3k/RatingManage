@@ -12,6 +12,10 @@ use App\Http\Requests\UploadFileRequest;
 use App\Http\Requests\UploadNewFolderRequest;
 use Illuminate\Support\Facades\File;
 
+use App\Rating;
+use App\RatingType;
+use App\Fre;
+
 class RatingListController extends Controller
 {
 
@@ -31,7 +35,11 @@ class RatingListController extends Controller
      */
     public function index()
     {
-        //
+        $fres= Fre::all();
+        $ratingType= RatingType::all();
+        $ratings = Rating::orderBy('id', 'desc')
+                ->paginate(config('rating.posts_per_page'));
+        return view('admin.ratinglist.index',compact('ratings', 'fres', 'ratingType'));
     }
 
     /**
