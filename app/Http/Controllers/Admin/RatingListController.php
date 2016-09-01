@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\File;
 use App\Rating;
 use App\RatingType;
 use App\Fre;
+
+use Excel;
 use Carbon\Carbon;
 
 class RatingListController extends Controller
@@ -56,15 +58,7 @@ class RatingListController extends Controller
         return view('admin.ratinglist.index',compact('ratings', 'fres', 'ratingTypes','fields'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -84,16 +78,7 @@ class RatingListController extends Controller
                         ->withSuccess("收视率添加完成.");
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -157,42 +142,72 @@ class RatingListController extends Controller
     public function fileExplorer(Request $request)
     {
         $folder = 'rating';
-        dd($request);
         $data = $this->manager->folderInfo($folder);
         return view('admin.upload.index', $data);
     }
 
-    /**
-     * 上传文件
-     */
-    public function upload(UploadFileRequest $request)
-    {
-        $file = $_FILES['file'];
-        $fileName = $request->get('file_name');
-        $fileName = $fileName ?: $file['name'];
-        $path = str_finish($request->get('folder'), '/') . $fileName;
-        $content = File::get($file['tmp_name']);
-
-        $result = $this->manager->saveFile($path, $content);
-
-        if ($result === true) {
-            return redirect()
-                    ->back()
-                    ->withSuccess("文件 '$fileName' 上传成功.");
-        }
-
-        $error = $result ? : "上传文件文件出错.";
-        return redirect()
-                ->back()
-                ->withErrors([$error]);
-    }
 
     /**
      * 导入收视率
      */
     public function import(Request $request)
     {
+        $filename=$request->get('file');
+        $rt_id=4;
+        $filePath = 'public/uploads/'.$filename;
+        Excel::selectSheetsByIndex(0)->load($filePath, function($reader) {
+            $reader->noHeading();
+            $data = $reader->toArray();
+            $rating_dates=array_slice($data[0],1);
 
+            $rating_fres=array_slice($data[1],1);
+            while (list($key, $val) = each($rating_fres)){
+                if (strpos($val,'新闻综合频道')){
+                    $rating_fres[$key]='汕视一套';
+                }
+                else if (strpos($val,'生活经济频道')){
+                    $rating_fres[$key]='汕视二套';
+                }
+                else if (strpos($val,'影视文艺频道')){
+                    $rating_fres[$key]='汕视三套';
+                }
+                else if (strpos($val,'翠台')){
+                    $rating_fres[$key]='翡翠';
+                }
+                else if (strpos($val,'港台')){
+                    $rating_fres[$key]='本港';
+                }
+                else if (strpos($val,'凰卫')){
+                    $rating_fres[$key]='凤凰';
+                }
+            }
+
+            $rating_ratings=array_slice($data,3);
+            foreach ($rating_ratings as $rating_rating) {
+                $i=0;
+                $aratings=array_slice($rating_rating,1);
+                foreach ($aratings as $arating) {
+                    $rating_date=$rating_dates[$i];
+                    $fre=Fre::where('fre',$rating_fres[$i])->first();
+                    $rating_time = explode('-',$rating_rating[1]);
+                    $rating_btime=trim($rating_time[0]);
+                    $rating_etime=trim($rating_time[1]);
+                    $rating=new Rating;
+                    $rating->s_date=$rating_date;
+                    $rating->f_id=$fre->id;
+                    $rating->b_time=$rating_btime;
+                    $rating->e_time=$rating_etime;
+                    $rating->rt_id=1;
+                    $rating->a_rating=$arating;
+                    $rating->save();
+                    $i++;
+                }
+
+            }
+
+        });
+        return redirect('/admin/ratinglist')
+                        ->withSuccess("收视率导入成功.");
     }
 
     /**

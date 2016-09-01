@@ -93,11 +93,16 @@
                                 </button>
                             @endif
 
-                            @if (is_excelfile($file['mimeType']))
-                                <button type="button" class="btn btn-xs btn-success" onclick="import('{{ $file['webPath'] }}')">
-                                    <i class="fa fa-load fa-lg"></i>
-                                    导入
-                                </button>
+                            @if (strpos($folder,'adplaylist'))
+                                <a href="{{ url('/admin/adplaylist/import?file=').$folder.'/'.$file['name'] }}" class="btn btn-primary btn-xs">
+                                    <i class="fa fa-plus-circle"></i> 导入广告播出单
+                                </a>
+                            @endif
+
+                            @if (strpos($folder,'rating'))
+                                <a href="{{ url('/admin/ratinglist/import?file=').$folder.'/'.$file['name'] }}" class="btn btn-info btn-xs">
+                                    <i class="fa fa-plus-circle"></i> 导入收视率
+                                </a>
                             @endif
                         </td>
                     </tr>

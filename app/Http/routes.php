@@ -22,8 +22,14 @@ Route::group(['namespace'=>'Admin','middleware'=>'auth'],function(){
     Route::get('admin/ratinglist/search', 'RatingListController@search');
     Route::post('admin/ratinglist/deletebycondition', 'RatingListController@deleteByCondition');
     Route::get('admin/ratinglist/fileexplorer', 'RatingListController@fileExplorer');
-    Route::post('admin/ratinglist/import', 'RatingListController@import');
-    Route::resource('admin/ratinglist', 'RatingListController');
+    Route::get('admin/ratinglist/import', 'RatingListController@import');
+    Route::resource('admin/ratinglist', 'RatingListController', ['except' => ['show','create']]);
+
+    Route::get('admin/adplaylist/search', 'ADPlayListController@search');
+    Route::post('admin/adplaylist/deletebycondition', 'ADPlayListController@deleteByCondition');
+    Route::get('admin/adplaylist/fileexplorer', 'ADPlayListController@fileExplorer');
+    Route::post('admin/adplaylist/import', 'ADPlayListController@import');
+    Route::resource('admin/adplaylist', 'ADPlayListController', ['except' => ['show','create']]);
 
     Route::get('admin/upload', 'UploadController@index');
     Route::post('admin/upload/file', 'UploadController@uploadFile');

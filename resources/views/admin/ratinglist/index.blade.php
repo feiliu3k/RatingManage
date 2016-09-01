@@ -75,31 +75,31 @@
     </div>
 
     <div class="modal fade" id="modal-rating-create">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="POST" action="{{ url('/admin/ratinglist') }}" class="form-horizontal" >
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        ×
-                    </button>
-                    <h4 class="modal-title">新建收视率</h4>
-                </div>
-                <div class="modal-body">
-                    @include('admin.ratinglist._modals')
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                        取消
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        保存
-                    </button>
-                </div>
-            </form>
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" action="{{ url('/admin/ratinglist') }}" class="form-horizontal" >
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            ×
+                        </button>
+                        <h4 class="modal-title">新建收视率</h4>
+                    </div>
+                    <div class="modal-body">
+                        @include('admin.ratinglist._modals')
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            取消
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            保存
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
 @stop
 
