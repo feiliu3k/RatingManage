@@ -1,80 +1,68 @@
-<div class="modal fade" id="modal-rating-create">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="POST" action="{{ url('/admin/ratinglist') }}" class="form-horizontal" >
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">
-                        ×
-                    </button>
-                    <h4 class="modal-title">新建收视率</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="s_date" class="col-sm-3 control-label">
-                            日期
-                        </label>
-                        <div class="col-sm-4">
-                            <input type="text" id="s_date" name="s_date" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="proid" class="col-md-3 control-label">
-                            频道
-                        </label>
-                        <div class="col-md-8">
-                            <select name="proid" id="proid" class="form-control" >
-                            @foreach ($fres as $fre)
-                                <option value="{{ $fre->id }} ">
-                                    {{ $fre->fre }}
-                                </option>
-                            @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="b_time" class="col-sm-3 control-label">
-                            开始时间
-                        </label>
-                        <div class="col-sm-4">
-                            <input type="text" id="b_time" name="b_time" class="form-control" placeholder="00:00" >
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="e_time" class="col-sm-3 control-label">
-                            结束时间
-                        </label>
-                        <div class="col-sm-4">
-                            <input type="text" id="e_time" name="e_time" class="form-control"placeholder="00:00" >
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="file_name" class="col-sm-3 control-label">
-                            收视率类型
-                        </label>
-                        <div class="col-sm-4">
-                            <input type="text" id="file_name" name="file_name" class="form-control">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="file_name" class="col-sm-3 control-label">
-                            收视率
-                        </label>
-                        <div class="col-sm-4">
-                            <input type="text" id="file_name" name="file_name" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                        取消
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        保存
-                    </button>
-                </div>
-            </form>
+    <div class="form-group">
+        <label for="s_date" class="col-sm-3 control-label">
+            日期
+        </label>
+        <div class="col-sm-4">
+            <input type="text" id="s_date" name="s_date" class="form-control" value="{{ $fields['s_date'] }}">
         </div>
     </div>
-</div>
+    <div class="form-group">
+        <label for="f_id" class="col-md-3 control-label">
+            频道
+        </label>
+        <div class="col-md-8">
+            <select name="f_id" id="f_id" class="form-control" >
+            @foreach ($fres as $fre)
+                @if ($fields['f_id']==$fre->id)
+                    <option value="{{ $fre->id }} " selected="selected">
+                        {{ $fre->fre }}
+                    </option>
+                @else
+                    <option value="{{ $fre->id }} ">
+                        {{ $fre->fre }}
+                    </option>
+                @endif
+            @endforeach
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="b_time" class="col-sm-3 control-label">
+            时间
+        </label>
+        <div class="col-sm-2">
+            <input type="text" id="b_time" name="b_time" class="form-control" value="{{ $fields['b_time'] }}">
+        </div>
+
+        <div class="col-sm-2">
+            <input type="text" id="e_time" name="e_time" class="form-control" value="{{ $fields['e_time'] }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="file_name" class="col-sm-3 control-label">
+            收视率类型
+        </label>
+        <div class="col-sm-4">
+            <select name="rt_id" id="rt_id" class="form-control" >
+            @foreach ($ratingTypes as $ratingType)
+                @if ($fields['rt_id']==$ratingType->id)
+                    <option value="{{ $ratingType->id }} " selected="selected">
+                         {{ $ratingType->rating_type }}
+                    </option>
+                @else
+                    <option value="{{ $ratingType->id }} ">
+                         {{ $ratingType->rating_type }}
+                    </option>
+                @endif
+            @endforeach
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="a_rating" class="col-sm-3 control-label">
+            收视率
+        </label>
+        <div class="col-sm-4">
+            <input type="text" id="a_rating" name="a_rating" class="form-control" value="{{ $fields['a_rating'] }}">
+        </div>
+    </div>

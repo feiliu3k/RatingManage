@@ -15,15 +15,26 @@ use Illuminate\Support\Facades\File;
 use App\Rating;
 use App\RatingType;
 use App\Fre;
+use Carbon\Carbon;
 
 class RatingListController extends Controller
 {
+
+    protected $fieldList = [
+        's_date'=>'',
+        'f_id'=>1,
+        'b_time'=>'00:00',
+        'e_time'=>'00:00',
+        'rt_id'=>1,
+        'a_rating'=>0.0
+    ];
 
     protected $manager;
 
     public function __construct(UploadsManager $manager)
     {
         $this->manager = $manager;
+
     }
 
 
@@ -36,10 +47,13 @@ class RatingListController extends Controller
     public function index()
     {
         $fres= Fre::all();
-        $ratingType= RatingType::all();
+        $ratingTypes= RatingType::all();
+
+        $fields=$this->fieldList;
+        $fields['s_date'] =Carbon::now()->addHour()->toDateString();
         $ratings = Rating::orderBy('id', 'desc')
                 ->paginate(config('rating.posts_per_page'));
-        return view('admin.ratinglist.index',compact('ratings', 'fres', 'ratingType'));
+        return view('admin.ratinglist.index',compact('ratings', 'fres', 'ratingTypes','fields'));
     }
 
     /**
@@ -60,7 +74,14 @@ class RatingListController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rating = new Rating();
+        foreach (array_keys($this->fieldList) as $field) {
+            $rating->$field = $request->get($field);
+        }
+        $rating->save();
+
+        return redirect('/admin/ratinglist')
+                        ->withSuccess("收视率添加完成.");
     }
 
     /**
@@ -82,7 +103,17 @@ class RatingListController extends Controller
      */
     public function edit($id)
     {
-        //
+        $fres= Fre::all();
+        $ratingTypes= RatingType::all();
+
+        $rating = Rating::findOrFail($id);
+        $fields = ['id' => $id];
+        foreach (array_keys($this->fieldList) as $field) {
+            $fields[$field] = old($field, $rating->$field);
+        }
+
+        return view('admin.ratinglist.edit', compact( 'fres', 'ratingTypes','fields'));
+
     }
 
     /**
@@ -94,7 +125,15 @@ class RatingListController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $rating = Rating::findOrFail($id);
+
+        foreach (array_keys($this->fieldList) as $field) {
+            $rating->$field = $request->get($field);
+        }
+        $rating->save();
+
+        return redirect("/admin/ratinglist")
+                        ->withSuccess("收视率更新成功.");
     }
 
     /**
@@ -105,7 +144,11 @@ class RatingListController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $rating = Rating::findOrFail($id);
+        $rating->delete();
+
+        return redirect('/admin/ratinglist')
+                        ->withSuccess("收视率删除成功.");
     }
 
     /**

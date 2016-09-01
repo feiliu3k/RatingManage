@@ -7,6 +7,16 @@
         <li @if (Request::is('admin/ratingtype*')) class="active" @endif>
             <a href="{{ url('/admin/ratingtype') }}">收视率类型</a>
         </li>
+        <li @if (Request::is('admin/ratinglist*')) class="active" @endif>
+            <a href="{{ url('/admin/ratinglist') }}">收视率</a>
+        </li>
+        <li @if (Request::is('admin/adplaylist*')) class="active" @endif>
+            <a href="{{ url('/admin/adplaylist') }}">广告播出列表</a>
+        </li>
+        <li @if (Request::is('admin/statlist*')) class="active" @endif>
+            <a href="{{ url('/admin/statlist') }}">广告收视率统计列表</a>
+        </li>
+
         <li @if (Request::is('admin/upload*')) class="active" @endif>
             <a href="{{ url('/admin/upload') }}">上传</a>
         </li>
