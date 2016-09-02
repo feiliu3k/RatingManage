@@ -31,6 +31,15 @@ class RatingListController extends Controller
         'a_rating'=>0.0
     ];
 
+    protected $_searchCondition = [
+        'b_date'=>'',
+        'e_date'=>'',
+        'f_id'=>0,
+        'b_time'=>'00:00',
+        'e_time'=>'00:00',
+        'rt_id'=>0
+    ];
+
     protected $manager;
 
     public function __construct(UploadsManager $manager)
@@ -53,9 +62,12 @@ class RatingListController extends Controller
 
         $fields=$this->fieldList;
         $fields['s_date'] =Carbon::now()->addHour()->toDateString();
+        $searchCondition=$this->_searchCondition;
+        $searchCondition['b_date'] =Carbon::now()->toDateString();
+        $searchCondition['e_date'] =Carbon::now()->addDay(7)->toDateString();
         $ratings = Rating::orderBy('id', 'desc')
                 ->paginate(config('rating.posts_per_page'));
-        return view('admin.ratinglist.index',compact('ratings', 'fres', 'ratingTypes','fields'));
+        return view('admin.ratinglist.index',compact('ratings', 'fres', 'ratingTypes','fields','searchCondition'));
     }
 
 
@@ -142,7 +154,9 @@ class RatingListController extends Controller
     public function fileExplorer(Request $request)
     {
         $folder = 'rating';
+        $ratingTypes= RatingType::all();
         $data = $this->manager->folderInfo($folder);
+        $data['ratingTypes']=$ratingTypes;
         return view('admin.upload.index', $data);
     }
 
@@ -152,12 +166,15 @@ class RatingListController extends Controller
      */
     public function import(Request $request)
     {
-        $filename=$request->get('file');
-        $rt_id=4;
+        $filename=$request->get('rating_filename');
+        $rt_id=$request->get('rt_id');
+
         $filePath = 'public/uploads/'.$filename;
-        Excel::selectSheetsByIndex(0)->load($filePath, function($reader) {
+
+        Excel::selectSheetsByIndex(0)->load($filePath, function($reader) use($rt_id){
             $reader->noHeading();
             $data = $reader->toArray();
+
             $rating_dates=array_slice($data[0],1);
 
             $rating_fres=array_slice($data[1],1);
@@ -197,7 +214,7 @@ class RatingListController extends Controller
                     $rating->f_id=$fre->id;
                     $rating->b_time=$rating_btime;
                     $rating->e_time=$rating_etime;
-                    $rating->rt_id=1;
+                    $rating->rt_id=$rt_id;
                     $rating->a_rating=$arating;
                     $rating->save();
                     $i++;
@@ -215,7 +232,50 @@ class RatingListController extends Controller
      */
     public function search(Request $request)
     {
+        $fres= Fre::all();
+        $ratingTypes= RatingType::all();
 
+        $fields=$this->fieldList;
+        $fields['s_date'] =Carbon::now()->addHour()->toDateString();
+        $searchCondition=$this->_searchCondition;
+
+        foreach (array_keys($this->_searchCondition) as $field) {
+            $searchCondition[$field] = $request->get($field);
+        }
+
+        $ratings=null;
+
+        if (($searchCondition['rt_id']==0) and ($searchCondition['f_id']==0)){
+            $ratings = Rating::whereBetween('s_date', [$searchCondition['b_date'], $searchCondition['e_date']])
+                            ->where('b_time','>=',$searchCondition['b_time'])
+                            ->where('e_time','<=',$searchCondition['e_time'])
+                            ->orderBy('id', 'desc')
+                            ->paginate(config('rating.posts_per_page'));
+        } else if ($searchCondition['rt_id']==0) {
+            $ratings = Rating::whereBetween('s_date', [$searchCondition['b_date'], $searchCondition['e_date']])
+                            ->where('b_time','>=',$searchCondition['b_time'])
+                            ->where('e_time','<=',$searchCondition['e_time'])
+                            ->where('rt_id',$searchCondition['rt_id'])
+                            ->orderBy('id', 'desc')
+                            ->paginate(config('rating.posts_per_page'));
+        } else if ($searchCondition['f_id']==0){
+            $ratings = Rating::whereBetween('s_date', [$searchCondition['b_date'], $searchCondition['e_date']])
+                            ->where('b_time','>=',$searchCondition['b_time'])
+                            ->where('e_time','<=',$searchCondition['e_time'])
+                            ->where('f_id',$searchCondition['f_id'])
+                            ->orderBy('id', 'desc')
+                            ->paginate(config('rating.posts_per_page'));
+        } else {
+            $ratings = Rating::whereBetween('s_date', [$searchCondition['b_date'], $searchCondition['e_date']])
+                            ->where('b_time','>=',$searchCondition['b_time'])
+                            ->where('e_time','<=',$searchCondition['e_time'])
+                            ->where('rt_id',$searchCondition['rt_id'])
+                            ->where('f_id',$searchCondition['f_id'])
+                            ->orderBy('id', 'desc')
+                            ->paginate(config('rating.posts_per_page'));
+        }
+
+        return view('admin.ratinglist.index',compact('ratings', 'fres', 'ratingTypes','fields','searchCondition'));
     }
 
     /**

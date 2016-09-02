@@ -10,6 +10,7 @@ use App\Services\UploadsManager;
 use App\Http\Requests\UploadFileRequest;
 use App\Http\Requests\UploadNewFolderRequest;
 use Illuminate\Support\Facades\File;
+use App\RatingType;
 
 class UploadController extends Controller
 {
@@ -26,8 +27,9 @@ class UploadController extends Controller
     public function index(Request $request)
     {
         $folder = $request->get('folder');
+        $ratingTypes= RatingType::all();
         $data = $this->manager->folderInfo($folder);
-
+        $data['ratingTypes']=$ratingTypes;
         return view('admin.upload.index', $data);
     }
 

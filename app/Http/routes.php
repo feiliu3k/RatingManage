@@ -19,13 +19,13 @@ Route::group(['namespace'=>'Admin','middleware'=>'auth'],function(){
     Route::resource('admin/fre', 'FreController', ['except' => 'show']);
     Route::resource('admin/ratingtype', 'RatingTypeController', ['except' => 'show']);
 
-    Route::get('admin/ratinglist/search', 'RatingListController@search');
+    Route::post('admin/ratinglist/search', 'RatingListController@search');
     Route::post('admin/ratinglist/deletebycondition', 'RatingListController@deleteByCondition');
     Route::get('admin/ratinglist/fileexplorer', 'RatingListController@fileExplorer');
-    Route::get('admin/ratinglist/import', 'RatingListController@import');
+    Route::post('admin/ratinglist/import', 'RatingListController@import');
     Route::resource('admin/ratinglist', 'RatingListController', ['except' => ['show','create']]);
 
-    Route::get('admin/adplaylist/search', 'ADPlayListController@search');
+    Route::post('admin/adplaylist/search', 'ADPlayListController@search');
     Route::post('admin/adplaylist/deletebycondition', 'ADPlayListController@deleteByCondition');
     Route::get('admin/adplaylist/fileexplorer', 'ADPlayListController@fileExplorer');
     Route::post('admin/adplaylist/import', 'ADPlayListController@import');

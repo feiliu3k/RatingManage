@@ -20,9 +20,9 @@
                 <a href="{{ url('/admin/ratinglist/fileexplorer') }}" class="btn btn-info btn-md">
                     <i class="fa fa-plus-circle"></i> 导入收视率
                 </a>
-                <a href="{{ url('/admin/ratinglist/search') }}" class="btn btn-success btn-md">
+                <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#modal-rating-search">
                     <i class="fa fa-plus-circle"></i> 搜索收视率
-                </a>
+                </button>
 
             </div>
         </div>
@@ -101,6 +101,33 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modal-rating-search">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" action="{{ url('/admin/ratinglist/search') }}" class="form-horizontal" >
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            ×
+                        </button>
+                        <h4 class="modal-title">搜索收视率</h4>
+                    </div>
+                    <div class="modal-body">
+                        @include('admin.ratinglist._search')
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            取消
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            搜索
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 @stop
 
 @section('scripts')
@@ -129,6 +156,14 @@
             });
 
             $("#s_date").pickadate({
+                format: "yyyy-mm-dd"
+            });
+
+            $("#b_date").pickadate({
+                format: "yyyy-mm-dd"
+            });
+
+            $("#e_date").pickadate({
                 format: "yyyy-mm-dd"
             });
         });

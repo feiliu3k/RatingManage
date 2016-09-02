@@ -150,24 +150,87 @@
     </div>
 </div>
 
-{{-- 浏览图片 --}}
-<div class="modal fade" id="modal-image-view">
+
+{{-- 导入收视率 --}}
+<div class="modal fade" id="modal-rating-import">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">
-                    ×
-                </button>
-                <h4 class="modal-title">图片预览</h4>
-            </div>
-            <div class="modal-body">
-                <img id="preview-image" src="x" class="img-responsive">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                    取消
-                </button>
-            </div>
+            <form method="POST" action="{{ url('/admin/ratinglist/import') }}" class="form-horizontal" >
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        ×
+                    </button>
+                    <h4 class="modal-title">导入收视率</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="file_name" class="col-sm-3 control-label">
+                            收视率类型
+                        </label>
+                        <div class="col-sm-8">
+                            <select name="rt_id" id="rt_id" class="form-control" >
+                            @foreach ($ratingTypes as $ratingType)
+                                <option value="{{ $ratingType->id }} ">
+                                     {{ $ratingType->rating_type }}
+                                </option>
+                            @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="new_folder_name" class="col-sm-3 control-label">
+                            文件名
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="rating_filename" name="rating_filename" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        取消
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        保存
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- 导入广告播出单 --}}
+<div class="modal fade" id="modal-adplaylist-import">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ url('/admin/adplaylist') }}" class="form-horizontal" >
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        ×
+                    </button>
+                    <h4 class="modal-title">广告播出单</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="new_folder_name" class="col-sm-3 control-label">
+                            文件名
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="adplaylist_filename" name="adplaylist_filename" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        取消
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        保存
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

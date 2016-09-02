@@ -87,22 +87,24 @@
                                 删除
                             </button>
                             @if (is_image($file['mimeType']))
-                                <button type="button" class="btn btn-xs btn-success" onclick="preview_image('{{ $file['webPath'] }}')">
+                                <button type="button" class="btn btn-xs btn-info" onclick="preview_image('{{ $file['webPath'] }}')">
                                     <i class="fa fa-eye fa-lg"></i>
                                     预览
                                 </button>
                             @endif
 
                             @if (strpos($folder,'adplaylist'))
-                                <a href="{{ url('/admin/adplaylist/import?file=').$folder.'/'.$file['name'] }}" class="btn btn-primary btn-xs">
-                                    <i class="fa fa-plus-circle"></i> 导入广告播出单
-                                </a>
+                                <button type="button" class="btn btn-xs btn-primary" onclick="import_adplaylist('{{ $folder.'/'.$file['name'] }}')">
+                                    <i class="fa fa-plus-circle fa-lg"></i>
+                                    导入广告播出单
+                                </button>
                             @endif
 
                             @if (strpos($folder,'rating'))
-                                <a href="{{ url('/admin/ratinglist/import?file=').$folder.'/'.$file['name'] }}" class="btn btn-info btn-xs">
-                                    <i class="fa fa-plus-circle"></i> 导入收视率
-                                </a>
+                                <button type="button" class="btn btn-xs btn-success" onclick="import_rating('{{ $folder.'/'.$file['name'] }}')">
+                                    <i class="fa fa-plus-circle fa-lg"></i>
+                                    导入收视率
+                                </button>
                             @endif
                         </td>
                     </tr>
@@ -136,10 +138,16 @@
         $("#modal-folder-delete").modal("show");
     }
 
-    // 预览图片
-    function preview_image(path) {
-        $("#preview-image").attr("src", path);
-        $("#modal-image-view").modal("show");
+     // 导入收视率
+    function import_rating(path) {
+        $("#rating_filename").val(path);
+        $("#modal-rating-import").modal("show");
+    }
+
+     // 导入广告播出单
+    function import_adplaylist(path) {
+        $("#adplaylist_filename").val(path);
+        $("#modal-adplaylist-import").modal("show");
     }
 
     // 初始化数据
