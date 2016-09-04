@@ -9,25 +9,22 @@
     <div class="container-fluid">
         <div class="row page-title-row">
             <div class="col-md-6">
-                <h3>广告播出单 <small>» 列表</small></h3>
+                <h3>收视率统计单 <small>» 列表</small></h3>
             </div>
 
             <div class="col-md-6 text-right">
 
-                <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#modal-adplaylist-create">
-                    <i class="fa fa-upload"></i> 新建广告播出单
-                </button>
 
-                <a href="{{ url('/admin/adplaylist/fileexplorer') }}" class="btn btn-info btn-md">
-                    <i class="fa fa-plus-circle"></i> 导入广告播出单
+                <a href="{{ url('/admin/statlist/fileexplorer') }}" class="btn btn-info btn-md">
+                    <i class="fa fa-plus-circle"></i> 导出收视率统计单
                 </a>
 
-                <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#modal-adplaylist-search">
-                    <i class="fa fa-plus-circle"></i> 搜索广告播出单
+                <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#modal-statlist-search">
+                    <i class="fa fa-plus-circle"></i> 搜索收视率统计单
                 </button>
                 @if ($searchflag)
-                <button type="button" class="btn btn-danger btn-md" data-toggle="modal" data-target="#modal-adplaylist-deletebycondition">
-                    <i class="fa fa-plus-circle"></i> 删除广告播出单
+                <button type="button" class="btn btn-danger btn-md" data-toggle="modal" data-target="#modal-statlist-deletebycondition">
+                    <i class="fa fa-plus-circle"></i> 删除收视率统计单
                 </button>
                 @endif
 
@@ -55,18 +52,18 @@
                         </tr>
                      </thead>
                     <tbody>
-                    @foreach ($adplaylists as $adplaylist)
+                    @foreach ($statlists as $statlist)
                         <tr>
-                            <td>{{ $adplaylist->d_date }}</td>
-                            <td>{{ $adplaylist->b_time }}</td>
-                            <th>{{ $adplaylist->fre->fre }}</th>
-                            <th>{{ $adplaylist->number }}</th>
-                            <th>{{ $adplaylist->len }}</th>
-                            <th>{{ $adplaylist->content }}</th>
-                            <th>{{ $adplaylist->belt }}</th>
-                            <th>{{ $adplaylist->ht_len }}</th>
+                            <td>{{ $statlist->d_date }}</td>
+                            <td>{{ $statlist->b_time }}</td>
+                            <th>{{ $statlist->fre->fre }}</th>
+                            <th>{{ $statlist->number }}</th>
+                            <th>{{ $statlist->len }}</th>
+                            <th>{{ $statlist->content }}</th>
+                            <th>{{ $statlist->belt }}</th>
+                            <th>{{ $statlist->ht_len }}</th>
                             <td>
-                                <a href="{{ url('/admin/adplaylist').'/'.$adplaylist->id.'/edit' }}" class="btn btn-xs btn-info">
+                                <a href="{{ url('/admin/statlist').'/'.$statlist->id.'/edit' }}" class="btn btn-xs btn-info">
                                     <i class="fa fa-edit"></i> 编辑
                                 </a>
                             </td>
@@ -78,7 +75,7 @@
 
                 <div class="pull-right">
                     @if ($searchflag){!!
-                        $adplaylists->appends([
+                        $statlists->appends([
                             'b_date' => $searchCondition['b_date'],
                             'e_date' => $searchCondition['e_date'],
                             'f_id' => $searchCondition['f_id'],
@@ -88,7 +85,7 @@
                             'content' => $searchCondition['content'],
                         ])->render() !!}
                     @else
-                        {!! $adplaylists->render() !!}
+                        {!! $statlists->render() !!}
                     @endif
                 </div>
 
@@ -97,46 +94,20 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-adplaylist-create">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form method="POST" action="{{ url('/admin/adplaylist') }}" class="form-horizontal" >
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">
-                            ×
-                        </button>
-                        <h4 class="modal-title">新建广告播出单</h4>
-                    </div>
-                    <div class="modal-body">
-                        @include('admin.adplaylist._modals')
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
-                            取消
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            保存
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
-    <div class="modal fade" id="modal-adplaylist-search">
+    <div class="modal fade" id="modal-statlist-search">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="get" action="{{ url('/admin/adplaylist/search') }}" class="form-horizontal" >
+                <form method="get" action="{{ url('/admin/statlist/search') }}" class="form-horizontal" >
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
                             ×
                         </button>
-                        <h4 class="modal-title">搜索广告播出单</h4>
+                        <h4 class="modal-title">搜索收视率统计单</h4>
                     </div>
                     <div class="modal-body">
-                        @include('admin.adplaylist._search')
+                        @include('admin.statlist._search')
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">
@@ -151,19 +122,19 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-adplaylist-deletebycondition">
+    <div class="modal fade" id="modal-statlist-deletebycondition">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="post" action="{{ url('/admin/adplaylist/deletebycondition') }}" class="form-horizontal" >
+                <form method="post" action="{{ url('/admin/statlist/deletebycondition') }}" class="form-horizontal" >
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
                             ×
                         </button>
-                        <h4 class="modal-title">删除广告播出单</h4>
+                        <h4 class="modal-title">删除收视率统计单</h4>
                     </div>
                     <div class="modal-body">
-                        @include('admin.adplaylist._search')
+                        @include('admin.statlist._search')
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">

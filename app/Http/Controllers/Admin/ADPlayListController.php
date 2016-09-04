@@ -218,23 +218,30 @@ class ADPlayListController extends Controller
             $searchCondition[$field] = $request->get($field);
         }
 
-        $adplaylists=null;
 
-        if (($searchCondition['f_id']==0)){
-            $adplaylists = ADPlayList::whereBetween('d_date', [$searchCondition['b_date'], $searchCondition['e_date']])
+        $adplaylists = ADPlayList::whereBetween('d_date', [$searchCondition['b_date'], $searchCondition['e_date']])
                             ->where('b_time','>=',$searchCondition['b_time'])
-                            ->where('b_time','<=',$searchCondition['e_time'])
-                            ->orderBy('id', 'desc')
-                            ->paginate(config('rating.posts_per_page'));
-        }else {
-            $adplaylists = ADPlayList::whereBetween('d_date', [$searchCondition['b_date'], $searchCondition['e_date']])
-                            ->where('b_time','>=',$searchCondition['b_time'])
-                            ->where('b_time','<=',$searchCondition['e_time'])
-                            ->where('f_id',$searchCondition['f_id'])
-                            ->orderBy('id', 'desc')
-                            ->paginate(config('rating.posts_per_page'));
+                            ->where('b_time','<=',$searchCondition['e_time']);
+
+        if (($searchCondition['f_id']!=0)){
+
+            $adplaylists->where('f_id',$searchCondition['f_id']);
+
         }
 
+        if (trim($searchCondition['content'])){
+            $adplaylists->where('content','like','%'.trim($searchCondition['content'].'%'));
+
+        }
+
+        if (trim($searchCondition['number'])){
+            $adplaylists->where('number','like','%'.trim($searchCondition['number']).'%');
+
+        }
+
+
+        $adplaylists=$adplaylists->orderBy('id', 'desc')
+                                 ->paginate(config('rating.posts_per_page'));
 
         return view('admin.adplaylist.index',compact('adplaylists', 'fres','fields','searchCondition', 'searchflag'));
     }
@@ -252,22 +259,28 @@ class ADPlayListController extends Controller
 
 
 
-        $adplaylists=null;
+        $adplaylists = ADPlayList::whereBetween('d_date', [$searchCondition['b_date'], $searchCondition['e_date']])
+                            ->where('b_time','>=',$searchCondition['b_time'])
+                            ->where('b_time','<=',$searchCondition['e_time']);
 
-        if (($searchCondition['f_id']==0)){
-            $adplaylists = ADPlayList::whereBetween('d_date', [$searchCondition['b_date'], $searchCondition['e_date']])
-                            ->where('b_time','>=',$searchCondition['b_time'])
-                            ->where('b_time','<=',$searchCondition['e_time'])
-                            ->delete();
-        }else {
-            $adplaylists = ADPlayList::whereBetween('d_date', [$searchCondition['b_date'], $searchCondition['e_date']])
-                            ->where('b_time','>=',$searchCondition['b_time'])
-                            ->where('b_time','<=',$searchCondition['e_time'])
-                            ->where('f_id',$searchCondition['f_id'])
-                            ->delete();
+        if (($searchCondition['f_id']!=0)){
+
+            $adplaylists->where('f_id',$searchCondition['f_id']);
+
+        }
+
+        if (trim($searchCondition['content'])){
+            $adplaylists->where('content','like','%'.trim($searchCondition['content'].'%'));
+
+        }
+
+        if (trim($searchCondition['number'])){
+            $adplaylists->where('number','like','%'.trim($searchCondition['number']).'%');
+
         }
 
 
+        $adplaylists=$adplaylists->delete();
 
         return redirect('/admin/adplaylist')
                         ->withSuccess("广告播出记录删除成功.");
