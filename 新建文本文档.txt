@@ -1,0 +1,1 @@
+INSERT INTO statlists(a_id,r_id) SELECT a.id,r.id FROM adplaylists a LEFT JOIN ratings r ON a.`f_id`=r.`f_id` WHERE a.`d_date`=r.`s_date` AND a.`b_time` BETWEEN r.`b_time` AND r.`e_time` 
