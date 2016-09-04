@@ -14,14 +14,18 @@
 
             <div class="col-md-6 text-right">
 
-
-                <a href="{{ url('/admin/statlist/fileexplorer') }}" class="btn btn-info btn-md">
+                <a href="{{ url('/admin/statlist/fileexplorer') }}" class="btn btn-primary btn-md">
                     <i class="fa fa-plus-circle"></i> 导出收视率统计单
                 </a>
 
                 <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#modal-statlist-search">
                     <i class="fa fa-plus-circle"></i> 搜索收视率统计单
                 </button>
+
+                <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#modal-statlist-stat">
+                    <i class="fa fa-plus-circle"></i> 统计收视率统计单
+                </button>
+
                 @if ($searchflag)
                 <button type="button" class="btn btn-danger btn-md" data-toggle="modal" data-target="#modal-statlist-deletebycondition">
                     <i class="fa fa-plus-circle"></i> 删除收视率统计单
@@ -46,9 +50,9 @@
                             <th>合同号</th>
                             <th>实际长度</th>
                             <th>广告内容</th>
-                            <th>带号</th>
                             <th>广告长度</th>
-                            <th data-sortable="false">操作</th>
+                            <th>收视率类型</th>
+                            <th>收视率</th>
                         </tr>
                      </thead>
                     <tbody>
@@ -62,11 +66,8 @@
                             <th>{{ $statlist->content }}</th>
                             <th>{{ $statlist->belt }}</th>
                             <th>{{ $statlist->ht_len }}</th>
-                            <td>
-                                <a href="{{ url('/admin/statlist').'/'.$statlist->id.'/edit' }}" class="btn btn-xs btn-info">
-                                    <i class="fa fa-edit"></i> 编辑
-                                </a>
-                            </td>
+                            <th>{{ $statlist->rating_type }}</th>
+                            <th>{{ $statlist->a_rating }}</th>
                         </tr>
                     @endforeach
                     </tbody>
@@ -83,17 +84,42 @@
                             'e_time' => $searchCondition['e_time'],
                             'number' => $searchCondition['number'],
                             'content' => $searchCondition['content'],
+                            'rt_id' => $searchCondition['rt_id'],
                         ])->render() !!}
                     @else
                         {!! $statlists->render() !!}
                     @endif
                 </div>
-
-
             </div>
         </div>
     </div>
 
+    <div class="modal fade" id="modal-statlist-stat">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" action="{{ url('/admin/statlist/stat') }}" class="form-horizontal" >
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            ×
+                        </button>
+                        <h4 class="modal-title">搜索收视率统计单</h4>
+                    </div>
+                    <div class="modal-body">
+                        @include('admin.statlist._search')
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            取消
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            搜索
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <div class="modal fade" id="modal-statlist-search">
         <div class="modal-dialog">
@@ -176,9 +202,6 @@
                 clear: '清除'
             });
 
-            $("#d_date").pickadate({
-                format: "yyyy-mm-dd"
-            });
 
             $("#b_date").pickadate({
                 format: "yyyy-mm-dd"

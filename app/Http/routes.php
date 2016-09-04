@@ -31,6 +31,14 @@ Route::group(['namespace'=>'Admin','middleware'=>'auth'],function(){
     Route::post('admin/adplaylist/import', 'ADPlayListController@import');
     Route::resource('admin/adplaylist', 'ADPlayListController', ['except' => ['show','create']]);
 
+    Route::get('admin/statlist/search', 'StatListController@search');
+    Route::get('admin/statlist/stat', 'StatListController@stat');
+    Route::get('admin/statlist/download', 'StatListController@download');
+    Route::post('admin/statlist/deletebycondition', 'StatListController@deleteByCondition');
+    Route::get('admin/statlist/fileexplorer', 'StatListController@fileExplorer');
+    Route::post('admin/statlist/import', 'StatListController@import');
+    Route::resource('admin/statlist', 'StatListController', ['except' => ['show','create','store']]);
+
     Route::get('admin/upload', 'UploadController@index');
     Route::post('admin/upload/file', 'UploadController@uploadFile');
     Route::delete('admin/upload/file', 'UploadController@deleteFile');

@@ -165,7 +165,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="file_name" class="col-sm-3 control-label">
+                        <label for="rt_id" class="col-sm-3 control-label">
                             收视率类型
                         </label>
                         <div class="col-sm-8">
@@ -179,7 +179,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="new_folder_name" class="col-sm-3 control-label">
+                        <label for="rating_filename" class="col-sm-3 control-label">
                             文件名
                         </label>
                         <div class="col-sm-8">
@@ -216,7 +216,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="new_folder_name" class="col-sm-3 control-label">
+                        <label for="adplaylist_filename" class="col-sm-3 control-label">
                             文件名
                         </label>
                         <div class="col-sm-8">
@@ -230,6 +230,43 @@
                     </button>
                     <button type="submit" class="btn btn-primary">
                         导入
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endif
+
+@if (strpos($folder,'statlist'))
+{{-- 导出收视率统计单 --}}
+<div class="modal fade" id="modal-statlist-download">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ url('/admin/stat/download') }}" class="form-horizontal" >
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        ×
+                    </button>
+                    <h4 class="modal-title">广告播出单</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="stat_filename" class="col-sm-3 control-label">
+                            文件名
+                        </label>
+                        <div class="col-sm-8">
+                            <input type="text" id="stat_filename" name="stat_filename" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        取消
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        下载
                     </button>
                 </div>
             </form>
