@@ -24,7 +24,7 @@ class ADPlayListController extends Controller
 
     protected $fieldList = [
         'd_date'=>'',
-        'b_time'=>'08:00',
+        'b_time'=>'08:30',
         'f_id'=>1,
         'number'=>'',
         'len'=>'',
@@ -37,8 +37,8 @@ class ADPlayListController extends Controller
         'b_date'=>'',
         'e_date'=>'',
         'f_id'=>0,
-        'b_time'=>'08:00',
-        'e_time'=>'08:15',
+        'b_time'=>'00:00',
+        'e_time'=>'40:00',
         'number'=>'',
         'content'=>'',
     ];
@@ -109,7 +109,7 @@ class ADPlayListController extends Controller
             $fields[$field] = old($field, $adplaylist->$field);
         }
 
-        return view('admin.ratinglist.edit', compact( 'fres', 'fields'));
+        return view('admin.adplaylist.edit', compact( 'fres', 'fields'));
     }
 
     /**
@@ -143,7 +143,7 @@ class ADPlayListController extends Controller
         $adplaylist = ADPlayList::findOrFail($id);
         $adplaylist->delete();
 
-        return redirect('/admin/ratinglist')
+        return redirect('/admin/adplaylist')
                         ->withSuccess("广告播出记录删除成功.");
     }
 
@@ -172,57 +172,106 @@ class ADPlayListController extends Controller
         Excel::selectSheetsByIndex(0)->load($filePath, function($reader) {
             $reader->noHeading();
             $data = $reader->toArray();
+            $adplaylist_datas=array_slice($data,1);
 
-            $adplaylist_dates=array_slice($data[0],1);
 
-            $rating_fres=array_slice($data[1],1);
-            while (list($key, $val) = each($rating_fres)){
-                if (strpos($val,'新闻综合频道')){
-                    $rating_fres[$key]='汕视一套';
-                }
-                else if (strpos($val,'生活经济频道')){
-                    $rating_fres[$key]='汕视二套';
-                }
-                else if (strpos($val,'影视文艺频道')){
-                    $rating_fres[$key]='汕视三套';
-                }
-                else if (strpos($val,'翠台')){
-                    $rating_fres[$key]='翡翠';
-                }
-                else if (strpos($val,'港台')){
-                    $rating_fres[$key]='本港';
-                }
-                else if (strpos($val,'凰卫')){
-                    $rating_fres[$key]='凤凰';
-                }
+            foreach ($adplaylist_datas as $adplaylist_data) {
+
+                    $fre=Fre::where('fre',$adplaylist_data[3])->first();
+                    $adplaylist=new ADPlayList;
+                    $adplaylist->d_date=$adplaylist_data[1];
+                    $adplaylist_time = explode('\'',$adplaylist_data[2]);
+
+                    $adplaylist->b_time=$adplaylist_time[0].':'.$adplaylist_time[1];
+                    $adplaylist->f_id=$fre->id;
+                    $adplaylist->number=$adplaylist_data[4];
+                    $adplaylist->len=$adplaylist_data[5];
+                    $adplaylist->content=$adplaylist_data[6];
+                    $adplaylist->belt=$adplaylist_data[7];
+                    $adplaylist->ht_len=$adplaylist_data[8];
+
+                    $adplaylist->save();
             }
 
-            $rating_ratings=array_slice($data,3);
-            foreach ($rating_ratings as $rating_rating) {
-                $i=0;
-                $aratings=array_slice($rating_rating,1);
-                foreach ($aratings as $arating) {
-                    $rating_date=$rating_dates[$i];
-                    $fre=Fre::where('fre',$rating_fres[$i])->first();
-                    $rating_time = explode('-',$rating_rating[1]);
-                    $rating_btime=trim($rating_time[0]);
-                    $rating_etime=trim($rating_time[1]);
-                    $rating=new Rating;
-                    $rating->s_date=$rating_date;
-                    $rating->f_id=$fre->id;
-                    $rating->b_time=$rating_btime;
-                    $rating->e_time=$rating_etime;
-                    $rating->rt_id=$rt_id;
-                    $rating->a_rating=$arating;
-                    $rating->save();
-                    $i++;
-                }
 
-            }
 
         });
-        return redirect('/admin/ratinglist')
+        return redirect('/admin/adplaylist')
                         ->withSuccess("收视率导入成功.");
+    }
+
+    /**
+     * 按条件搜索
+     */
+    public function search(Request $request)
+    {
+        $searchflag=true;
+        $fres= Fre::all();
+
+
+        $fields=$this->fieldList;
+        $fields['s_date'] =Carbon::now()->addHour()->toDateString();
+
+        $searchCondition=$this->_searchCondition;
+
+        foreach (array_keys($this->_searchCondition) as $field) {
+            $searchCondition[$field] = $request->get($field);
+        }
+
+        $adplaylists=null;
+
+        if (($searchCondition['f_id']==0)){
+            $adplaylists = ADPlayList::whereBetween('d_date', [$searchCondition['b_date'], $searchCondition['e_date']])
+                            ->where('b_time','>=',$searchCondition['b_time'])
+                            ->where('b_time','<=',$searchCondition['e_time'])
+                            ->orderBy('id', 'desc')
+                            ->paginate(config('rating.posts_per_page'));
+        }else {
+            $adplaylists = ADPlayList::whereBetween('d_date', [$searchCondition['b_date'], $searchCondition['e_date']])
+                            ->where('b_time','>=',$searchCondition['b_time'])
+                            ->where('b_time','<=',$searchCondition['e_time'])
+                            ->where('f_id',$searchCondition['f_id'])
+                            ->orderBy('id', 'desc')
+                            ->paginate(config('rating.posts_per_page'));
+        }
+
+
+        return view('admin.adplaylist.index',compact('adplaylists', 'fres','fields','searchCondition', 'searchflag'));
+    }
+
+
+        /**
+     * 按条件删除
+     */
+    public function deleteByCondition(Request $request)
+    {
+
+        foreach (array_keys($this->_searchCondition) as $field) {
+            $searchCondition[$field] = $request->get($field);
+        }
+
+
+
+        $adplaylists=null;
+
+        if (($searchCondition['f_id']==0)){
+            $adplaylists = ADPlayList::whereBetween('d_date', [$searchCondition['b_date'], $searchCondition['e_date']])
+                            ->where('b_time','>=',$searchCondition['b_time'])
+                            ->where('b_time','<=',$searchCondition['e_time'])
+                            ->delete();
+        }else {
+            $adplaylists = ADPlayList::whereBetween('d_date', [$searchCondition['b_date'], $searchCondition['e_date']])
+                            ->where('b_time','>=',$searchCondition['b_time'])
+                            ->where('b_time','<=',$searchCondition['e_time'])
+                            ->where('f_id',$searchCondition['f_id'])
+                            ->delete();
+        }
+
+
+
+        return redirect('/admin/adplaylist')
+                        ->withSuccess("广告播出记录删除成功.");
+
     }
 
 }

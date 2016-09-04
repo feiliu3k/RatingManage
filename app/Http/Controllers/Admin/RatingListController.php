@@ -25,8 +25,8 @@ class RatingListController extends Controller
     protected $fieldList = [
         's_date'=>'',
         'f_id'=>1,
-        'b_time'=>'08:00',
-        'e_time'=>'08:15',
+        'b_time'=>'00:00',
+        'e_time'=>'40:00',
         'rt_id'=>1,
         'a_rating'=>0.0
     ];
@@ -35,8 +35,8 @@ class RatingListController extends Controller
         'b_date'=>'',
         'e_date'=>'',
         'f_id'=>0,
-        'b_time'=>'08:00',
-        'e_time'=>'08:15',
+        'b_time'=>'00:00',
+        'e_time'=>'40:00',
         'rt_id'=>0
     ];
 
@@ -281,7 +281,7 @@ class RatingListController extends Controller
     }
 
     /**
-     * 按条件搜索
+     * 按条件删除
      */
     public function deleteByCondition(Request $request)
     {
@@ -321,7 +321,7 @@ class RatingListController extends Controller
 
 
         return redirect('/admin/ratinglist')
-                        ->withSuccess("收视率导入成功.");
+                        ->withSuccess("收视率删除成功.");
 
     }
 }

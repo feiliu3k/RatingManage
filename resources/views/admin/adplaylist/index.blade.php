@@ -77,14 +77,15 @@
 
 
                 <div class="pull-right">
-                    @if ($searchflag){!! $adplaylists->appends([
-                        'b_date' => $searchCondition['b_date'],
-                        'e_date' => $searchCondition['e_date'],
-                        'f_id' => $searchCondition['f_id'],
-                        'b_time' => $searchCondition['b_time'],
-                        'e_time' => $searchCondition['e_time'],
-                        'number' => $searchCondition['number'],
-                        'content' => $searchCondition['content'],
+                    @if ($searchflag){!!
+                        $adplaylists->appends([
+                            'b_date' => $searchCondition['b_date'],
+                            'e_date' => $searchCondition['e_date'],
+                            'f_id' => $searchCondition['f_id'],
+                            'b_time' => $searchCondition['b_time'],
+                            'e_time' => $searchCondition['e_time'],
+                            'number' => $searchCondition['number'],
+                            'content' => $searchCondition['content'],
                         ])->render() !!}
                     @else
                         {!! $adplaylists->render() !!}
@@ -204,7 +205,7 @@
                 clear: '清除'
             });
 
-            $("#s_date").pickadate({
+            $("#d_date").pickadate({
                 format: "yyyy-mm-dd"
             });
 

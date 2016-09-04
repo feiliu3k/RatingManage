@@ -150,7 +150,7 @@
     </div>
 </div>
 
-
+@if (strpos($folder,'rating'))
 {{-- 导入收视率 --}}
 <div class="modal fade" id="modal-rating-import">
     <div class="modal-dialog">
@@ -192,19 +192,21 @@
                         取消
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        保存
+                        导入
                     </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+@endif
 
+@if (strpos($folder,'adplaylist'))
 {{-- 导入广告播出单 --}}
 <div class="modal fade" id="modal-adplaylist-import">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="POST" action="{{ url('/admin/adplaylist') }}" class="form-horizontal" >
+            <form method="POST" action="{{ url('/admin/adplaylist/import') }}" class="form-horizontal" >
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">
@@ -227,10 +229,11 @@
                         取消
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        保存
+                        导入
                     </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+@endif

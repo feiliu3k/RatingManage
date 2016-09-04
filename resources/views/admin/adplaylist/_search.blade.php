@@ -55,7 +55,7 @@
             合同号
         </label>
         <div class="col-sm-4">
-            <input type="text" id="number" name="number" class="form-control" value="{{ $fields['number'] }}">
+            <input type="text" id="number" name="number" class="form-control" value="{{ $searchCondition['number'] }}">
         </div>
     </div>
     <div class="form-group">
@@ -63,6 +63,6 @@
             广告内容
         </label>
         <div class="col-sm-4">
-            <input type="text" id="content" name="content" class="form-control" value="{{ $fields['content'] }}">
+            <input type="text" id="content" name="content" class="form-control" value="{{ $searchCondition['content'] }}">
         </div>
     </div>
