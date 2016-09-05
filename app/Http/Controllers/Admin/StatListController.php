@@ -74,7 +74,6 @@ class StatListController extends Controller
     {
         $statlist = StatList::findOrFail($id);
         $statlist->delete();
-
         return redirect('/admin/statlist')
                         ->withSuccess("收视率统计记录删除成功.");
     }
@@ -194,37 +193,35 @@ class StatListController extends Controller
             $searchCondition[$field] = $request->get($field);
         }
 
-
-        $statlists = StatList::whereBetween('d_date', [$searchCondition['b_date'], $searchCondition['e_date']])
-                            ->where('b_time','>=',$searchCondition['b_time'])
-                            ->where('b_time','<=',$searchCondition['e_time']);
-
-        if (($searchCondition['f_id']!=0)){
-
-            $statlists->where('f_id',$searchCondition['f_id']);
-
-        }
-
-       if (($searchCondition['rt_id']!=0)){
-
-            $statlists->where('rt_id',$searchCondition['rt_id']);
-
-        }
-
-        if (trim($searchCondition['content'])){
-            $statlists->where('content','like','%'.trim($searchCondition['content'].'%'));
-
-        }
-
-        if (trim($searchCondition['number'])){
-            $statlists->where('number','like','%'.trim($searchCondition['number']).'%');
-
-        }
+        $statlists=ADPlayList::leftjoin('ratings','ratings.f_id', '=', 'adplaylists.f_id');
+        JoinClause
 
 
-        $statlists=$statlists->orderBy('d_data', 'desc')->orderBy('b_time','desc')
-                                 ->paginate(config('rating.posts_per_page'));
+       //  if (($searchCondition['f_id']!=0)){
 
+       //      $statlists->where('adplaylists.f_id',$searchCondition['f_id']);
+
+       //  }
+
+       // if (($searchCondition['rt_id']!=0)){
+
+       //      $statlists->where('ratings.rt_id',$searchCondition['rt_id']);
+
+       //  }
+
+       //  if (trim($searchCondition['content'])){
+       //      $statlists->where('adplaylists.content','like','%'.trim($searchCondition['content'].'%'));
+
+       //  }
+
+       //  if (trim($searchCondition['number'])){
+       //      $statlists->where('adplaylists.number','like','%'.trim($searchCondition['number']).'%');
+
+       //  }
+
+
+        $statlists=$statlists->get();
+        dd($statlists);
         return view('admin.statlist.index',compact('statlists', 'searchCondition', 'searchflag'));
     }
 

@@ -15,20 +15,20 @@
             <div class="col-md-6 text-right">
 
                 <a href="{{ url('/admin/statlist/fileexplorer') }}" class="btn btn-info btn-md">
-                    <i class="fa fa-plus-circle"></i> 导出收视率统计单
+                    <i class="fa fa-plus-circle"></i> 下载
                 </a>
 
                 <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#modal-statlist-search">
-                    <i class="fa fa-plus-circle"></i> 搜索收视率统计单
+                    <i class="fa fa-plus-circle"></i> 搜索
                 </button>
 
                 <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#modal-statlist-stat">
-                    <i class="fa fa-plus-circle"></i> 统计收视率统计单
+                    <i class="fa fa-plus-circle"></i> 统计
                 </button>
 
                 @if ($searchflag)
                 <button type="button" class="btn btn-danger btn-md" data-toggle="modal" data-target="#modal-statlist-deletebycondition">
-                    <i class="fa fa-plus-circle"></i> 删除收视率统计单
+                    <i class="fa fa-plus-circle"></i> 删除
                 </button>
                 @endif
 
@@ -103,7 +103,7 @@
     <div class="modal fade" id="modal-statlist-stat">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="POST" action="{{ url('/admin/statlist/stat') }}" class="form-horizontal" >
+                <form method="post" action="{{ url('/admin/statlist/stat') }}" class="form-horizontal" >
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
@@ -184,10 +184,9 @@
     <div class="modal fade" id="modal-statlist-delete">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form method="post" action="{{ url('/admin/statlist/destroy') }}" class="form-horizontal" >
+                <form method="post" id="stat_id" action="{{ url('/admin/statlist') }}" class="form-horizontal" >
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="_method" value="DELETE">
-                    <input type="hidden" id="stat_id" name="id">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
                             ×
@@ -251,7 +250,9 @@
         });
 
         function delete_stat(id) {
-        $("#stat_id").val(id);
+
+        var url= $("#stat_id").attr("action")+'/'+id;
+        $("#stat_id").attr("action",url);
         $("#modal-statlist-delete").modal("show");
     }
     </script>
