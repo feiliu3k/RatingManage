@@ -19,10 +19,10 @@
                     @include('admin.partials.errors')
                     @include('admin.partials.success')
 
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/ratinglist').'/'. $fields['id'] }}">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/admin/ratinglist').'/'. $fields['rid'] }}">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                         <input type="hidden" name="_method" value="PUT">
-                        <input type="hidden" name="id" value="{{ $fields['id'] }}">
+                        <input type="hidden" name="rid" value="{{ $fields['rid'] }}">
 
 
 
@@ -67,7 +67,7 @@
                 </p>
             </div>
             <div class="modal-footer">
-                <form method="POST" action="{{ url('/admin/ratinglist').'/'.$fields['id'] }}">
+                <form method="POST" action="{{ url('/admin/ratinglist').'/'.$fields['rid'] }}">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="_method" value="DELETE">
                     <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>

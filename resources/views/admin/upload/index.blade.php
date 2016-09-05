@@ -16,6 +16,7 @@
                 </ul>
             </div>
         </div>
+        @if (!(strpos($folder,'statlist')))
         <div class="col-md-6 text-right">
             <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#modal-folder-create">
                 <i class="fa fa-plus-circle"></i> 新建文件夹
@@ -24,6 +25,7 @@
                 <i class="fa fa-upload"></i> 上传
             </button>
         </div>
+        @endif
     </div>
 
     <div class="row">

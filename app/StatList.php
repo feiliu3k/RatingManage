@@ -20,7 +20,7 @@ class StatList extends Model
 
     public function rating()
     {
-        return $this->hasOne('App\Rating','id','r_id');
+        return $this->hasOne('App\Rating','rid','r_id');
     }
 
 }

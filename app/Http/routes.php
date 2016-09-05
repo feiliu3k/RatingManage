@@ -33,6 +33,8 @@ Route::group(['namespace'=>'Admin','middleware'=>'auth'],function(){
 
     Route::get('admin/statlist/search', 'StatListController@search');
     Route::post('admin/statlist/stat', 'StatListController@stat');
+    Route::post('admin/statlist/save', 'StatListController@save');
+    Route::post('admin/statlist/export', 'StatListController@export');
     Route::get('admin/statlist/download', 'StatListController@download');
     Route::post('admin/statlist/deletebycondition', 'StatListController@deleteByCondition');
     Route::get('admin/statlist/fileexplorer', 'StatListController@fileExplorer');

@@ -121,7 +121,7 @@ class StatListController extends Controller
             $statlists->where('adplaylists.number','like','%'.trim($searchCondition['number']).'%');
         }
 
-        $statlists = $statlists->join('ratings','ratings.id', '=', 'statlists.r_id');
+        $statlists = $statlists->join('ratings','ratings.rid', '=', 'statlists.r_id');
 
         if (($searchCondition['rt_id']!=0)){
             $statlists->where('ratings.rt_id',$searchCondition['rt_id']);
@@ -131,7 +131,7 @@ class StatListController extends Controller
 
         $statlists=$statlists->orderBy('adplaylists.d_date', 'desc')->orderBy('adplaylists.b_time','desc')
                           ->paginate(config('rating.posts_per_page'));
-        //dd($statlists);
+
         return view('admin.statlist.index',compact('statlists', 'fres', 'ratingTypes', 'searchCondition', 'searchflag'));
     }
 
@@ -168,7 +168,7 @@ class StatListController extends Controller
             $statlists->where('adplaylists.number','like','%'.trim($searchCondition['number']).'%');
         }
 
-        $statlists = $statlists->join('ratings','ratings.id', '=', 'statlists.r_id');
+        $statlists = $statlists->join('ratings','ratings.rid', '=', 'statlists.r_id');
 
         if (($searchCondition['rt_id']!=0)){
             $statlists->where('ratings.rt_id',$searchCondition['rt_id']);
@@ -177,15 +177,19 @@ class StatListController extends Controller
         $statlists=$statlists->delete();
         return redirect('/admin/statlist')
                         ->withSuccess("收视率统计记录删除成功.");
-
     }
 
     /**
-     * 按条件统计
+     * 按条件进行统计
      */
     public function stat(Request $request)
     {
+
         $searchflag=true;
+        $exportExcel=true;
+
+        $fres= Fre::all();
+        $ratingTypes= RatingType::all();
 
         $searchCondition=$this->_searchCondition;
 
@@ -193,36 +197,185 @@ class StatListController extends Controller
             $searchCondition[$field] = $request->get($field);
         }
 
-        $statlists=ADPlayList::leftjoin('ratings','ratings.f_id', '=', 'adplaylists.f_id');
-        JoinClause
+        $statlists=Rating::leftjoin('adplaylists',function($join){
+            $join->on('ratings.f_id', '=', 'adplaylists.f_id')
+                ->on('ratings.s_date', '=', 'adplaylists.d_date')
+                ->on('adplaylists.b_time', '>=', 'ratings.b_time')
+                ->on('adplaylists.b_time', '<=', 'ratings.e_time');
+        })->leftjoin('fres',function($join){
+            $join->on('fres.id','=','ratings.f_id');
+        })->leftjoin('ratingTypes',function($join){
+            $join->on('ratingTypes.id','=','ratings.rt_id');
+        });
+
+        $statlists->whereBetween('adplaylists.d_date',[$searchCondition['b_date'],$searchCondition['e_date']]);
+         $statlists->whereBetween('adplaylists.b_time',[$searchCondition['b_time'],$searchCondition['e_time']]);
+
+        if (($searchCondition['f_id']!=0)){
+
+            $statlists->where('adplaylists.f_id',$searchCondition['f_id']);
+
+        }
+
+       if (($searchCondition['rt_id']!=0)){
+
+            $statlists->where('ratings.rt_id',$searchCondition['rt_id']);
+
+        }
+
+        if (trim($searchCondition['content'])){
+            $statlists->where('adplaylists.content','like','%'.trim($searchCondition['content'].'%'));
+
+        }
+
+        if (trim($searchCondition['number'])){
+            $statlists->where('adplaylists.number','like','%'.trim($searchCondition['number']).'%');
+
+        }
+
+        $statlists=$statlists->orderBy('adplaylists.d_date', 'desc')->orderBy('adplaylists.b_time','desc')->select('adplaylists.id','adplaylists.d_date', 'adplaylists.b_time','fres.fre', 'adplaylists.number','adplaylists.len', 'adplaylists.content','adplaylists.belt','adplaylists.ht_len','ratings.rid','ratingtypes.rating_type','ratings.a_rating')->get();
 
 
-       //  if (($searchCondition['f_id']!=0)){
+        return view('admin.statlist.stat',compact('statlists', 'fres', 'ratingTypes', 'searchCondition', 'searchflag','exportExcel'));
 
-       //      $statlists->where('adplaylists.f_id',$searchCondition['f_id']);
-
-       //  }
-
-       // if (($searchCondition['rt_id']!=0)){
-
-       //      $statlists->where('ratings.rt_id',$searchCondition['rt_id']);
-
-       //  }
-
-       //  if (trim($searchCondition['content'])){
-       //      $statlists->where('adplaylists.content','like','%'.trim($searchCondition['content'].'%'));
-
-       //  }
-
-       //  if (trim($searchCondition['number'])){
-       //      $statlists->where('adplaylists.number','like','%'.trim($searchCondition['number']).'%');
-
-       //  }
+    }
 
 
-        $statlists=$statlists->get();
-        dd($statlists);
-        return view('admin.statlist.index',compact('statlists', 'searchCondition', 'searchflag'));
+    /**
+     * 将统计结果保存在数据库
+     */
+    public function save(Request $request)
+    {
+
+
+        $searchCondition=$this->_searchCondition;
+
+        foreach (array_keys($this->_searchCondition) as $field) {
+            $searchCondition[$field] = $request->get($field);
+        }
+
+        $statlists=Rating::leftjoin('adplaylists',function($join){
+            $join->on('ratings.f_id', '=', 'adplaylists.f_id')
+                ->on('ratings.s_date', '=', 'adplaylists.d_date')
+                ->on('adplaylists.b_time', '>=', 'ratings.b_time')
+                ->on('adplaylists.b_time', '<=', 'ratings.e_time');
+        })->leftjoin('fres',function($join){
+            $join->on('fres.id','=','ratings.f_id');
+        })->leftjoin('ratingTypes',function($join){
+            $join->on('ratingTypes.id','=','ratings.rt_id');
+        });
+
+        $statlists->whereBetween('adplaylists.d_date',[$searchCondition['b_date'],$searchCondition['e_date']]);
+         $statlists->whereBetween('adplaylists.b_time',[$searchCondition['b_time'],$searchCondition['e_time']]);
+
+        if (($searchCondition['f_id']!=0)){
+
+            $statlists->where('adplaylists.f_id',$searchCondition['f_id']);
+
+        }
+
+       if (($searchCondition['rt_id']!=0)){
+
+            $statlists->where('ratings.rt_id',$searchCondition['rt_id']);
+
+        }
+
+        if (trim($searchCondition['content'])){
+            $statlists->where('adplaylists.content','like','%'.trim($searchCondition['content'].'%'));
+
+        }
+
+        if (trim($searchCondition['number'])){
+            $statlists->where('adplaylists.number','like','%'.trim($searchCondition['number']).'%');
+
+        }
+
+        $statlists=$statlists->select('adplaylists.id','ratings.rid')->get()->toArray();
+
+        foreach ($statlists as $sl) {
+            $statlist=new StatList;
+            $statlist->a_id=$sl['id'];
+            $statlist->r_id=$sl['rid'];
+            $statlist->save();
+        }
+
+        return redirect('/admin/statlist')
+                        ->withSuccess("收视率统计记录保存成功.");
+    }
+
+
+        /**
+     * 按条件进行统计
+     */
+    public function export(Request $request)
+    {
+        $filename=$request->get('excelfilename');
+
+        if (trim($filename)==''){
+            return redirect('/admin/statlist')
+                        ->withErrors("文件名不能为空！");
+        }
+
+        $searchCondition=$this->_searchCondition;
+
+        foreach (array_keys($this->_searchCondition) as $field) {
+            $searchCondition[$field] = $request->get($field);
+        }
+
+        $statlists=Rating::leftjoin('adplaylists',function($join){
+            $join->on('ratings.f_id', '=', 'adplaylists.f_id')
+                ->on('ratings.s_date', '=', 'adplaylists.d_date')
+                ->on('adplaylists.b_time', '>=', 'ratings.b_time')
+                ->on('adplaylists.b_time', '<=', 'ratings.e_time');
+        })->leftjoin('fres',function($join){
+            $join->on('fres.id','=','ratings.f_id');
+        })->leftjoin('ratingTypes',function($join){
+            $join->on('ratingTypes.id','=','ratings.rt_id');
+        });
+
+        $statlists->whereBetween('adplaylists.d_date',[$searchCondition['b_date'],$searchCondition['e_date']]);
+         $statlists->whereBetween('adplaylists.b_time',[$searchCondition['b_time'],$searchCondition['e_time']]);
+
+        if (($searchCondition['f_id']!=0)){
+
+            $statlists->where('adplaylists.f_id',$searchCondition['f_id']);
+
+        }
+
+       if (($searchCondition['rt_id']!=0)){
+
+            $statlists->where('ratings.rt_id',$searchCondition['rt_id']);
+
+        }
+
+        if (trim($searchCondition['content'])){
+            $statlists->where('adplaylists.content','like','%'.trim($searchCondition['content'].'%'));
+
+        }
+
+        if (trim($searchCondition['number'])){
+            $statlists->where('adplaylists.number','like','%'.trim($searchCondition['number']).'%');
+
+        }
+
+        $statlists=$statlists->orderBy('adplaylists.d_date', 'desc')->orderBy('adplaylists.b_time','desc')->select('adplaylists.d_date', 'adplaylists.b_time','fres.fre', 'adplaylists.number','adplaylists.len', 'adplaylists.content','adplaylists.belt','adplaylists.ht_len','ratingtypes.rating_type','ratings.a_rating')->get()->toArray();
+
+        Excel::create($filename, function($excel) use ($statlists) {
+
+            $excel->sheet('Sheet1', function($sheet) use ($statlists) {
+
+                    $sheet->fromArray($statlists, null, 'A1', true, false);
+
+                    $sheet->prependRow(array(
+                            '播出日期', '播出时间','频道','合同号','实际长度','合同内容','带号','广告长度', '收视率类型','收视率'
+                        ));
+
+            });
+
+        })->store('xls', public_path('uploads\statlist'));
+
+        return redirect('admin/statlist/fileexplorer');
+
     }
 
     /**

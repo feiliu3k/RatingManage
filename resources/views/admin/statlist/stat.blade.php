@@ -18,23 +18,17 @@
                     <i class="fa fa-plus-circle"></i> 下载
                 </a>
 
-                <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#modal-statlist-search">
+                <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#modal-statlist-search">
                     <i class="fa fa-plus-circle"></i> 搜索
                 </button>
 
-                <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#modal-statlist-stat">
+                <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#modal-statlist-stat">
                     <i class="fa fa-plus-circle"></i> 统计
                 </button>
 
-                @if ($searchflag)
-                <button type="button" class="btn btn-success btn-md" data-toggle="modal" data-target="#modal-statlist-exportexcel">
-                    <i class="fa fa-plus-circle"></i> 生成
-                </button>
-                @endif
-
-                @if ($searchflag)
-                <button type="button" class="btn btn-danger btn-md" data-toggle="modal" data-target="#modal-statlist-deletebycondition">
-                    <i class="fa fa-plus-circle"></i> 删除
+                @if ($exportExcel)
+                <button type="button" class="btn btn-primary btn-md" data-toggle="modal" data-target="#modal-statlist-save">
+                    <i class="fa fa-plus-circle"></i> 保存
                 </button>
                 @endif
 
@@ -59,27 +53,20 @@
                             <th>广告长度</th>
                             <th>收视率类型</th>
                             <th>收视率</th>
-                            <th data-sortable="false">操作</th>
                         </tr>
                      </thead>
                     <tbody>
                     @foreach ($statlists as $statlist)
                         <tr>
-                            <td>{{ $statlist->adplaylist->d_date }}</td>
-                            <td>{{ $statlist->adplaylist->b_time }}</td>
-                            <th>{{ $statlist->adplaylist->fre->fre }}</th>
-                            <th>{{ $statlist->adplaylist->number }}</th>
-                            <th>{{ $statlist->adplaylist->len }}</th>
-                            <th>{{ $statlist->adplaylist->content }}</th>
-                            <th>{{ $statlist->adplaylist->ht_len }}</th>
-                            <th>{{ $statlist->rating->ratingType->rating_type }}</th>
-                            <th>{{ $statlist->rating->a_rating }}</th>
-                            <td>
-                                <button type="button" class="btn btn-xs btn-danger" onclick="delete_stat('{{ $statlist->id }}')">
-                                <i class="fa fa-times-circle fa-lg"></i>
-                                删除
-                                </button>
-                            </td>
+                            <td>{{ $statlist->d_date }}</td>
+                            <td>{{ $statlist->b_time }}</td>
+                            <th>{{ $statlist->fre }}</th>
+                            <th>{{ $statlist->number }}</th>
+                            <th>{{ $statlist->len }}</th>
+                            <th>{{ $statlist->content }}</th>
+                            <th>{{ $statlist->ht_len }}</th>
+                            <th>{{ $statlist->rating_type }}</th>
+                            <th>{{ $statlist->a_rating }}</th>
                         </tr>
                     @endforeach
                     </tbody>
@@ -87,20 +74,7 @@
 
 
                 <div class="pull-right">
-                    @if ($searchflag){!!
-                        $statlists->appends([
-                            'b_date' => $searchCondition['b_date'],
-                            'e_date' => $searchCondition['e_date'],
-                            'f_id' => $searchCondition['f_id'],
-                            'b_time' => $searchCondition['b_time'],
-                            'e_time' => $searchCondition['e_time'],
-                            'number' => $searchCondition['number'],
-                            'content' => $searchCondition['content'],
-                            'rt_id' => $searchCondition['rt_id'],
-                        ])->render() !!}
-                    @else
-                        {!! $statlists->render() !!}
-                    @endif
+
                 </div>
             </div>
         </div>
@@ -125,7 +99,34 @@
                             取消
                         </button>
                         <button type="submit" class="btn btn-primary">
-                            搜索
+                            统计
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-statlist-save">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" action="{{ url('/admin/statlist/save') }}" class="form-horizontal" >
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            ×
+                        </button>
+                        <h4 class="modal-title">保存收视率统计表</h4>
+                    </div>
+                    <div class="modal-body">
+                        @include('admin.statlist._search')
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            取消
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            保存
                         </button>
                     </div>
                 </form>
@@ -160,41 +161,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-statlist-exportexcel">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form method="post" action="{{ url('/admin/statlist/export') }}" class="form-horizontal" >
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">
-                            ×
-                        </button>
-                        <h4 class="modal-title">生成Excel收视率统计表</h4>
-                    </div>
-                    <div class="modal-body">
-                        @include('admin.statlist._search')
-                        <div class="form-group">
-                            <label for="excelfilename" class="col-sm-3 control-label">
-                               文件名(非空)
-                            </label>
-                            <div class="col-sm-6">
-                                <input type="text" id="excelfilename" name="excelfilename" class="form-control" >
-                            </div>
-                        </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">
-                                取消
-                            </button>
-                            <button type="submit" class="btn btn-primary">
-                                生成
-                            </button>
-                        </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <div class="modal fade" id="modal-statlist-deletebycondition">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -222,36 +188,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-statlist-delete">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <form method="post" id="stat_id" action="{{ url('/admin/statlist') }}" class="form-horizontal" >
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">
-                            ×
-                        </button>
-                        <h4 class="modal-title">删除收视率统计记录</h4>
-                    </div>
-                    <div class="modal-body">
-                         <p class="lead">
-                            <i class="fa fa-question-circle fa-lg"></i>
-                                你是否要删除此收视率统计记录?
-                         </p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">
-                            取消
-                        </button>
-                        <button type="submit" class="btn btn-danger">
-                            删除
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+
 
 @stop
 
@@ -290,11 +227,6 @@
             });
         });
 
-        function delete_stat(id) {
 
-            var url= $("#stat_id").attr("action")+'/'+id;
-            $("#stat_id").attr("action",url);
-            $("#modal-statlist-delete").modal("show");
-        }
     </script>
 @stop

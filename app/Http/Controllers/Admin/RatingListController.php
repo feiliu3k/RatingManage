@@ -99,13 +99,13 @@ class RatingListController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($rid)
     {
         $fres= Fre::all();
         $ratingTypes= RatingType::all();
 
-        $rating = Rating::findOrFail($id);
-        $fields = ['id' => $id];
+        $rating = Rating::findOrFail($rid);
+        $fields = ['rid' => $rid];
         foreach (array_keys($this->fieldList) as $field) {
             $fields[$field] = old($field, $rating->$field);
         }
@@ -121,9 +121,9 @@ class RatingListController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $rid)
     {
-        $rating = Rating::findOrFail($id);
+        $rating = Rating::findOrFail($rid);
 
         foreach (array_keys($this->fieldList) as $field) {
             $rating->$field = $request->get($field);
@@ -140,9 +140,9 @@ class RatingListController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($rid)
     {
-        $rating = Rating::findOrFail($id);
+        $rating = Rating::findOrFail($rid);
         $rating->delete();
 
         return redirect('/admin/ratinglist')

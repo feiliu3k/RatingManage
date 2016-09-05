@@ -56,7 +56,7 @@
                     <tbody>
                     @foreach ($ratings as $rating)
                         <tr>
-                            <td>{{ $rating->id }}</td>
+                            <td>{{ $rating->rid }}</td>
                             <td>{{ $rating->s_date }}</td>
                             <th>{{ $rating->fre->fre }}</th>
                             <th>{{ $rating->b_time }}</th>
@@ -64,7 +64,7 @@
                             <th>{{ $rating->ratingType->rating_type }}</th>
                             <th>{{ $rating->a_rating }}</th>
                             <td>
-                                <a href="{{ url('/admin/ratinglist').'/'.$rating->id.'/edit' }}" class="btn btn-xs btn-info">
+                                <a href="{{ url('/admin/ratinglist').'/'.$rating->rid.'/edit' }}" class="btn btn-xs btn-info">
                                     <i class="fa fa-edit"></i> 编辑
                                 </a>
                             </td>
