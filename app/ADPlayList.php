@@ -19,5 +19,8 @@ class ADPlayList extends Model
         return $this->belongsTo('App\Fre','f_id','id');
     }
 
-
+     public function statlists()
+    {
+        return $this->hasMany('App\StatList','a_id','id');
+    }
 }

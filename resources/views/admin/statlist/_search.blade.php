@@ -3,10 +3,10 @@
             日期范围
         </label>
         <div class="col-sm-3">
-            <input type="text" id="b_date" name="b_date" class="form-control" value="{{ $searchCondition['b_date'] }}">
+            <input type="text"  name="b_date" class="form-control b_date" value="{{ $searchCondition['b_date'] }}">
         </div>
         <div class="col-sm-3">
-            <input type="text" id="e_date" name="e_date" class="form-control" value="{{ $searchCondition['e_date'] }}">
+            <input type="text"  name="e_date" class="form-control e_date" value="{{ $searchCondition['e_date'] }}">
         </div>
     </div>
     <div class="form-group">

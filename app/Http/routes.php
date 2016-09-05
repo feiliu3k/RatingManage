@@ -37,7 +37,7 @@ Route::group(['namespace'=>'Admin','middleware'=>'auth'],function(){
     Route::post('admin/statlist/deletebycondition', 'StatListController@deleteByCondition');
     Route::get('admin/statlist/fileexplorer', 'StatListController@fileExplorer');
     Route::post('admin/statlist/import', 'StatListController@import');
-    Route::resource('admin/statlist', 'StatListController', ['except' => ['show','create','store']]);
+    Route::resource('admin/statlist', 'StatListController', ['except' => ['show','create','edit','store','update']]);
 
     Route::get('admin/upload', 'UploadController@index');
     Route::post('admin/upload/file', 'UploadController@uploadFile');

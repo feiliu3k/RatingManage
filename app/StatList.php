@@ -15,12 +15,12 @@ class StatList extends Model
 
     public function adplaylist()
     {
-        return $this->hasOne('App\ADPlayList','a_id','id');
+        return $this->hasOne('App\ADPlayList','id','a_id');
     }
 
     public function rating()
     {
-        return $this->hasOne('App\Rating','r_id','id');
+        return $this->hasOne('App\Rating','id','r_id');
     }
 
 }

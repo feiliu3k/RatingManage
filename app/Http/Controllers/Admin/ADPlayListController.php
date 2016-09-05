@@ -28,7 +28,7 @@ class ADPlayListController extends Controller
         'f_id'=>1,
         'number'=>'',
         'len'=>'',
-        'content'=>1,
+        'content'=>'',
         'belt'=>'',
         'ht_len'=>'',
     ];

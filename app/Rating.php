@@ -24,5 +24,9 @@ class Rating extends Model
         return $this->belongsTo('App\RatingType','rt_id','id');
     }
 
+    public function statlists()
+    {
+        return $this->hasMany('App\StatList','r_id','id');
+    }
 
 }

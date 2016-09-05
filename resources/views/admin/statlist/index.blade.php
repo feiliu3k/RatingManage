@@ -14,7 +14,7 @@
 
             <div class="col-md-6 text-right">
 
-                <a href="{{ url('/admin/statlist/fileexplorer') }}" class="btn btn-primary btn-md">
+                <a href="{{ url('/admin/statlist/fileexplorer') }}" class="btn btn-info btn-md">
                     <i class="fa fa-plus-circle"></i> 导出收视率统计单
                 </a>
 
@@ -53,21 +53,27 @@
                             <th>广告长度</th>
                             <th>收视率类型</th>
                             <th>收视率</th>
+                            <th data-sortable="false">操作</th>
                         </tr>
                      </thead>
                     <tbody>
                     @foreach ($statlists as $statlist)
                         <tr>
-                            <td>{{ $statlist->d_date }}</td>
-                            <td>{{ $statlist->b_time }}</td>
-                            <th>{{ $statlist->fre->fre }}</th>
-                            <th>{{ $statlist->number }}</th>
-                            <th>{{ $statlist->len }}</th>
-                            <th>{{ $statlist->content }}</th>
-                            <th>{{ $statlist->belt }}</th>
-                            <th>{{ $statlist->ht_len }}</th>
-                            <th>{{ $statlist->rating_type }}</th>
-                            <th>{{ $statlist->a_rating }}</th>
+                            <td>{{ $statlist->adplaylist->d_date }}</td>
+                            <td>{{ $statlist->adplaylist->b_time }}</td>
+                            <th>{{ $statlist->adplaylist->fre->fre }}</th>
+                            <th>{{ $statlist->adplaylist->number }}</th>
+                            <th>{{ $statlist->adplaylist->len }}</th>
+                            <th>{{ $statlist->adplaylist->content }}</th>
+                            <th>{{ $statlist->adplaylist->ht_len }}</th>
+                            <th>{{ $statlist->rating->ratingType->rating_type }}</th>
+                            <th>{{ $statlist->rating->a_rating }}</th>
+                            <td>
+                                <button type="button" class="btn btn-xs btn-danger" onclick="delete_stat('{{ $statlist->id }}')">
+                                <i class="fa fa-times-circle fa-lg"></i>
+                                删除
+                                </button>
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>
@@ -103,7 +109,7 @@
                         <button type="button" class="close" data-dismiss="modal">
                             ×
                         </button>
-                        <h4 class="modal-title">搜索收视率统计单</h4>
+                        <h4 class="modal-title">统计收视率统计单</h4>
                     </div>
                     <div class="modal-body">
                         @include('admin.statlist._search')
@@ -175,6 +181,38 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modal-statlist-delete">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" action="{{ url('/admin/statlist/destroy') }}" class="form-horizontal" >
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" id="stat_id" name="id">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            ×
+                        </button>
+                        <h4 class="modal-title">删除收视率统计记录</h4>
+                    </div>
+                    <div class="modal-body">
+                         <p class="lead">
+                            <i class="fa fa-question-circle fa-lg"></i>
+                                你是否要删除此收视率统计记录?
+                         </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            取消
+                        </button>
+                        <button type="submit" class="btn btn-danger">
+                            删除
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 @stop
 
 @section('scripts')
@@ -203,13 +241,18 @@
             });
 
 
-            $("#b_date").pickadate({
+            $(".b_date").pickadate({
                 format: "yyyy-mm-dd"
             });
 
-            $("#e_date").pickadate({
+            $(".e_date").pickadate({
                 format: "yyyy-mm-dd"
             });
         });
+
+        function delete_stat(id) {
+        $("#stat_id").val(id);
+        $("#modal-statlist-delete").modal("show");
+    }
     </script>
 @stop

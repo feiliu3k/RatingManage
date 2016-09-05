@@ -32,7 +32,7 @@ class StatListController extends Controller
         'e_time'=>'40:00',
         'number'=>'',
         'content'=>'',
-        'rt_id'=>1,
+        'rt_id'=>0,
     ];
 
     protected $manager;
@@ -40,7 +40,6 @@ class StatListController extends Controller
     public function __construct(UploadsManager $manager)
     {
         $this->manager = $manager;
-
     }
 
 
@@ -52,69 +51,17 @@ class StatListController extends Controller
     public function index()
     {
         $searchflag=false;
+        $fres= Fre::all();
+        $ratingTypes= RatingType::all();
 
 
         $searchCondition=$this->_searchCondition;
         $searchCondition['b_date'] =Carbon::now(-8)->toDateString();
         $searchCondition['e_date'] =Carbon::now(-1)->toDateString();
 
-        $statlist = StatList::with('rating', 'adplaylist')->orderBy('id', 'desc')->get();
-        dd($statlist);
-    }
+        $statlists = StatList::with('rating','rating.ratingType','rating.fre','adplaylist','adplaylist.fre')->orderBy('id', 'desc')->paginate(config('rating.posts_per_page'));
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
+        return view('admin.statlist.index',compact('statlists', 'fres', 'ratingTypes', 'searchCondition', 'searchflag'));
     }
 
     /**
@@ -125,9 +72,22 @@ class StatListController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $statlist = StatList::findOrFail($id);
+        $statlist->delete();
+
+        return redirect('/admin/statlist')
+                        ->withSuccess("收视率统计记录删除成功.");
     }
 
+    /**
+     * 上传文件
+     */
+    public function fileExplorer(Request $request)
+    {
+        $folder = 'statlist';
+        $data = $this->manager->folderInfo($folder);
+        return view('admin.upload.index', $data);
+    }
 
     /**
      * 按条件搜索
@@ -135,6 +95,8 @@ class StatListController extends Controller
     public function search(Request $request)
     {
         $searchflag=true;
+        $fres= Fre::all();
+        $ratingTypes= RatingType::all();
 
         $searchCondition=$this->_searchCondition;
 
@@ -143,40 +105,83 @@ class StatListController extends Controller
         }
 
 
-        $statlists = StatList::whereBetween('d_date', [$searchCondition['b_date'], $searchCondition['e_date']])
-                            ->where('b_time','>=',$searchCondition['b_time'])
-                            ->where('b_time','<=',$searchCondition['e_time']);
+        $statlists = StatList::join('adplaylists','adplaylists.id', '=', 'statlists.a_id')->whereBetween('adplaylists.d_date', [$searchCondition['b_date'], $searchCondition['e_date']])
+                            ->where('adplaylists.b_time','>=',$searchCondition['b_time'])
+                            ->where('adplaylists.b_time','<=',$searchCondition['e_time']);
+
 
         if (($searchCondition['f_id']!=0)){
-
-            $statlists->where('f_id',$searchCondition['f_id']);
-
-        }
-
-       if (($searchCondition['rt_id']!=0)){
-
-            $statlists->where('rt_id',$searchCondition['rt_id']);
-
+            $statlists->where('adplaylists.f_id',$searchCondition['f_id']);
         }
 
         if (trim($searchCondition['content'])){
-            $statlists->where('content','like','%'.trim($searchCondition['content'].'%'));
-
+            $statlists->where('adplaylists.content','like','%'.trim($searchCondition['content'].'%'));
         }
 
         if (trim($searchCondition['number'])){
-            $statlists->where('number','like','%'.trim($searchCondition['number']).'%');
+            $statlists->where('adplaylists.number','like','%'.trim($searchCondition['number']).'%');
+        }
 
+        $statlists = $statlists->join('ratings','ratings.id', '=', 'statlists.r_id');
+
+        if (($searchCondition['rt_id']!=0)){
+            $statlists->where('ratings.rt_id',$searchCondition['rt_id']);
         }
 
 
-        $statlists=$statlists->orderBy('d_data', 'desc')->orderBy('b_time','desc')
-                                 ->paginate(config('rating.posts_per_page'));
 
-        return view('admin.statlist.index',compact('statlists', 'searchCondition', 'searchflag'));
+        $statlists=$statlists->orderBy('adplaylists.d_date', 'desc')->orderBy('adplaylists.b_time','desc')
+                          ->paginate(config('rating.posts_per_page'));
+        //dd($statlists);
+        return view('admin.statlist.index',compact('statlists', 'fres', 'ratingTypes', 'searchCondition', 'searchflag'));
     }
 
-        /**
+    /**
+     * 按条件删除
+     */
+    public function deleteByCondition(Request $request)
+    {
+        $searchflag=true;
+        $fres= Fre::all();
+        $ratingTypes= RatingType::all();
+
+        $searchCondition=$this->_searchCondition;
+
+        foreach (array_keys($this->_searchCondition) as $field) {
+            $searchCondition[$field] = $request->get($field);
+        }
+
+
+        $statlists = StatList::join('adplaylists','adplaylists.id', '=', 'statlists.a_id')->whereBetween('adplaylists.d_date', [$searchCondition['b_date'], $searchCondition['e_date']])
+                            ->where('adplaylists.b_time','>=',$searchCondition['b_time'])
+                            ->where('adplaylists.b_time','<=',$searchCondition['e_time']);
+
+
+        if (($searchCondition['f_id']!=0)){
+            $statlists->where('adplaylists.f_id',$searchCondition['f_id']);
+        }
+
+        if (trim($searchCondition['content'])){
+            $statlists->where('adplaylists.content','like','%'.trim($searchCondition['content'].'%'));
+        }
+
+        if (trim($searchCondition['number'])){
+            $statlists->where('adplaylists.number','like','%'.trim($searchCondition['number']).'%');
+        }
+
+        $statlists = $statlists->join('ratings','ratings.id', '=', 'statlists.r_id');
+
+        if (($searchCondition['rt_id']!=0)){
+            $statlists->where('ratings.rt_id',$searchCondition['rt_id']);
+        }
+
+        $statlists=$statlists->delete();
+        return redirect('/admin/statlist')
+                        ->withSuccess("收视率统计记录删除成功.");
+
+    }
+
+    /**
      * 按条件统计
      */
     public function stat(Request $request)
@@ -222,4 +227,13 @@ class StatListController extends Controller
 
         return view('admin.statlist.index',compact('statlists', 'searchCondition', 'searchflag'));
     }
+
+    /**
+     * 下载文件
+     */
+    public function download(Request $request){
+        return response()->download(realpath(base_path('public/uploads/statlist/')).'/'.$request->statlist_filename,
+            $request->statlist_filename);
+    }
+
 }

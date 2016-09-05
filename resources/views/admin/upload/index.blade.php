@@ -106,6 +106,13 @@
                                     导入收视率
                                 </button>
                             @endif
+
+                            @if (strpos($folder,'statlist'))
+                                <a class="btn btn-xs btn-success" href="{{ url('admin/statlist/download?statlist_filename=').$file['name'] }}" >
+                                    <i class="fa fa-plus-circle fa-lg"></i>
+                                    下载收视率统计单
+                                </a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
