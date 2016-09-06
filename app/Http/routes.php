@@ -54,4 +54,5 @@ Route::group(['namespace'=>'Admin','middleware'=>'auth'],function(){
 Route::get('login','Auth\AuthController@showLoginForm');
 Route::post('login','Auth\AuthController@login');
 Route::get('logout','Auth\AuthController@logout');
-Route::get('changepassword','HomeController@changePassword');
+Route::get('resetpassword','HomeController@resetPassword');
+Route::post('changepassword','HomeController@changePassword');

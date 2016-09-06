@@ -34,7 +34,7 @@
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="menu">
-                <li><a href="{{ url('/changePassword') }}">修改密码</a></li>
+                <li><a href="{{ url('/resetpassword') }}">修改密码</a></li>
                 <li><a href="{{ url('/logout') }}">注销</a></li>
             </ul>
         </li>
