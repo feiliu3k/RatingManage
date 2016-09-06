@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use Captcha;
 
 class AuthController extends Controller
 {
@@ -76,5 +77,21 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+    * 重写验证码需要必填
+    * @param  Request $request [description]
+    * @return [type]           [description]
+    */
+    protected function validateLogin(Request $request)
+    {
+      $this->validate($request,[
+        'name' => 'required',
+        'password' => 'required',
+        'captcha' => 'required|captcha'
+        ],[
+        'captcha.captcha' => trans('validation.captcha'),
+        'captcha.required' => trans('validation.captcha_required'),
+      ]);
+    }
 
 }

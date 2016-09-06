@@ -65,7 +65,7 @@ return [
     |
     */
 
-    'locale' => 'zh_CN',
+    'locale' => 'zh-CN',
 
     /*
     |--------------------------------------------------------------------------
@@ -78,7 +78,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'zh_CN',
+    'fallback_locale' => 'en',
 
     /*
     |--------------------------------------------------------------------------
@@ -158,6 +158,8 @@ return [
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
 
+        Mews\Captcha\CaptchaServiceProvider::class,
+
     ],
 
     /*
@@ -203,8 +205,9 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Captcha' => Mews\Captcha\Facades\Captcha::class,
     ],
 
 ];

@@ -28,6 +28,21 @@
                             </div>
                         </div>
 
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">验证码</label>
+                            <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" name="captcha" />
+                                    </div>
+                                    <div class="col-md-4">
+                                        <img src="{{ captcha_src() }}" style="cursor: pointer;" onclick="this.src='{{captcha_src()}}'+Math.random()">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <div class="checkbox">
