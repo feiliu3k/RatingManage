@@ -216,8 +216,8 @@ class RatingListController extends Controller
                         $rating_btime=$rating_btime.':00';
                         $rating_etime=$rating_etime.':59';
                     }else{
-                        $rating_btime=$rating_rating[1]->toTimeString();
-                        $rating_etime=$rating_rating[1]->addSeconds(59)->toDateTimeString();
+                        $rating_btime=$rating_rating[1]->hour.':'.$rating_rating[1]->minute.':00';
+                        $rating_etime=$rating_rating[1]->hour.':'.$rating_rating[1]->minute.':59';
                     }
                     $rating=new Rating;
                     $rating->s_date=$rating_date;
