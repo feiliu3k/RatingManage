@@ -2,7 +2,8 @@
 SQLyog Ultimate v11.11 (64 bit)
 MySQL - 5.5.5-10.1.13-MariaDB : Database - rating
 *********************************************************************
-*/
+*/
+
 
 /*!40101 SET NAMES utf8 */;
 
@@ -19,7 +20,7 @@ USE `rating`;
 /*Table structure for table `adplaylists` */
 
 CREATE TABLE `adplaylists` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `rid` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `d_date` datetime NOT NULL,
   `b_time` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `f_id` int(10) unsigned NOT NULL,
