@@ -210,6 +210,13 @@ class RatingListController extends Controller
                     $rating_time = explode('-',$rating_rating[1]);
                     $rating_btime=trim($rating_time[0]);
                     $rating_etime=trim($rating_time[1]);
+                    if ($rating_etime){
+                        $rating_btime=$rating_btime.':00';
+                        $rating_etime=$rating_etime.':59';
+                    }else{
+                        $rating_etime=$rating_btime.':59';
+                        $rating_btime=$rating_btime.':00';
+                    }
                     $rating=new Rating;
                     $rating->s_date=$rating_date;
                     $rating->f_id=$fre->id;
