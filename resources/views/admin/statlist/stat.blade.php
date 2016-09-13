@@ -46,12 +46,10 @@
                         <tr>
                             <th>播出日期</th>
                             <th>播出时间</th>
-                            <th>频道</th>
+                            <th>播出频道</th>
                             <th>合同号</th>
-                            <th>实际长度</th>
-                            <th>广告内容</th>
                             <th>广告长度</th>
-                            <th>收视率类型</th>
+                            <th>广告内容</th>
                             <th>收视率</th>
                         </tr>
                      </thead>
@@ -62,10 +60,8 @@
                             <td>{{ $statlist->b_time }}</td>
                             <th>{{ $statlist->fre }}</th>
                             <th>{{ $statlist->number }}</th>
-                            <th>{{ $statlist->len }}</th>
-                            <th>{{ $statlist->content }}</th>
                             <th>{{ $statlist->ht_len }}</th>
-                            <th>{{ $statlist->rating_type }}</th>
+                            <th>{{ $statlist->content }}</th>
                             <th>{{ $statlist->a_rating }}</th>
                         </tr>
                     @endforeach

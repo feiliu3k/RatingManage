@@ -59,7 +59,7 @@ class StatListController extends Controller
         $searchCondition['b_date'] =Carbon::now(-8)->toDateString();
         $searchCondition['e_date'] =Carbon::now(-1)->toDateString();
 
-        $statlists = StatList::with('rating','rating.ratingType','rating.fre','adplaylist','adplaylist.fre')->orderBy('id', 'desc')->paginate(config('rating.posts_per_page'));
+        $statlists = StatList::with('rating','rating.ratingType','rating.fre','adplaylist','adplaylist.fre')->orderBy('id', 'asc')->paginate(config('rating.posts_per_page'));
 
         return view('admin.statlist.index',compact('statlists', 'fres', 'ratingTypes', 'searchCondition', 'searchflag'));
     }
@@ -129,7 +129,7 @@ class StatListController extends Controller
 
 
 
-        $statlists=$statlists->orderBy('adplaylists.d_date', 'desc')->orderBy('adplaylists.b_time','desc')
+        $statlists=$statlists->orderBy('adplaylists.d_date', 'asc')->orderBy('adplaylists.b_time','asc')
                           ->paginate(config('rating.posts_per_page'));
 
         return view('admin.statlist.index',compact('statlists', 'fres', 'ratingTypes', 'searchCondition', 'searchflag'));
@@ -233,7 +233,7 @@ class StatListController extends Controller
 
         }
 
-        $statlists=$statlists->orderBy('adplaylists.d_date', 'desc')->orderBy('adplaylists.b_time','desc')->select('adplaylists.id','adplaylists.d_date', 'adplaylists.b_time','fres.fre', 'adplaylists.number','adplaylists.len', 'adplaylists.content','adplaylists.belt','adplaylists.ht_len','ratings.rid','ratingtypes.rating_type','ratings.a_rating')->get();
+        $statlists=$statlists->orderBy('adplaylists.d_date', 'asc')->orderBy('adplaylists.b_time','asc')->select('adplaylists.d_date', 'adplaylists.b_time','fres.fre', 'adplaylists.number','adplaylists.ht_len', 'adplaylists.content','ratings.a_rating')->get();
 
 
         return view('admin.statlist.stat',compact('statlists', 'fres', 'ratingTypes', 'searchCondition', 'searchflag','exportExcel'));
@@ -358,7 +358,7 @@ class StatListController extends Controller
 
         }
 
-        $statlists=$statlists->orderBy('adplaylists.d_date', 'desc')->orderBy('adplaylists.b_time','desc')->select('adplaylists.d_date', 'adplaylists.b_time','fres.fre', 'adplaylists.number','adplaylists.len', 'adplaylists.content','adplaylists.belt','adplaylists.ht_len','ratingtypes.rating_type','ratings.a_rating')->get()->toArray();
+        $statlists=$statlists->orderBy('adplaylists.d_date', 'asc')->orderBy('adplaylists.b_time','asc')->select('adplaylists.d_date', 'adplaylists.b_time', 'fres.fre', 'adplaylists.number','adplaylists.ht_len', 'adplaylists.content', 'ratings.a_rating')->get()->toArray();
 
         Excel::create($filename, function($excel) use ($statlists) {
 
@@ -367,7 +367,7 @@ class StatListController extends Controller
                     $sheet->fromArray($statlists, null, 'A1', true, false);
 
                     $sheet->prependRow(array(
-                            '播出日期', '播出时间','频道','合同号','实际长度','合同内容','带号','广告长度', '收视率类型','收视率'
+                            '播出日期', '播出时间','播出频道','合同号','广告长度','合同内容', '收视率'
                         ));
 
             });
