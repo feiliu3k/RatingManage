@@ -52,12 +52,10 @@
                         <tr>
                             <th>播出日期</th>
                             <th>播出时间</th>
-                            <th>频道</th>
+                            <th>播出频道</th>
                             <th>合同号</th>
-                            <th>实际长度</th>
-                            <th>广告内容</th>
                             <th>广告长度</th>
-                            <th>收视率类型</th>
+                            <th>广告内容</th>
                             <th>收视率</th>
                             <th data-sortable="false">操作</th>
                         </tr>
@@ -69,10 +67,8 @@
                             <td>{{ $statlist->adplaylist->b_time }}</td>
                             <th>{{ $statlist->adplaylist->fre->fre }}</th>
                             <th>{{ $statlist->adplaylist->number }}</th>
-                            <th>{{ $statlist->adplaylist->len }}</th>
-                            <th>{{ $statlist->adplaylist->content }}</th>
                             <th>{{ $statlist->adplaylist->ht_len }}</th>
-                            <th>{{ $statlist->rating->ratingType->rating_type }}</th>
+                            <th>{{ $statlist->adplaylist->content }}</th>
                             <th>{{ $statlist->rating->a_rating }}</th>
                             <td>
                                 <button type="button" class="btn btn-xs btn-danger" onclick="delete_stat('{{ $statlist->id }}')">
