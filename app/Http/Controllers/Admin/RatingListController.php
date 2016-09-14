@@ -167,6 +167,9 @@ class RatingListController extends Controller
      */
     public function import(Request $request)
     {
+
+
+
         $filename=$request->get('rating_filename');
         $rt_id=$request->get('rt_id');
 
@@ -214,7 +217,17 @@ class RatingListController extends Controller
                         $rating_btime=trim($rating_time[0]);
                         $rating_etime=trim($rating_time[1]);
                         $rating_btime=$rating_btime.':00';
-                        $rating_etime=$rating_etime.':00';
+                        $rating_etimes = explode(':',$rating_time[1]);
+                        if ($rating_etimes[1]==00){
+                            $rating_etimes[0]=intval($rating_etimes[0])-1;
+                            $rating_etimes[1]=59;
+                        }else
+                        {
+                            $rating_etimes[1]=intval($rating_etimes[1])-1;
+                        }
+                        $hour=substr('0'.$rating_etimes[0]->hour,-2,2);
+                        $minute=substr('0'.$rating_etimes[1]->minute,-2,2);
+                        $rating_etime=$hour.':'.$minute.':59';
                     }else{
                         $hour=substr('0'.$rating_rating[1]->hour,-2,2);
                         $minute=substr('0'.$rating_rating[1]->minute,-2,2);
