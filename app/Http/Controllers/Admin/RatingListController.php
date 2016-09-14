@@ -225,8 +225,8 @@ class RatingListController extends Controller
                         {
                             $rating_etimes[1]=intval($rating_etimes[1])-1;
                         }
-                        $hour=substr('0'.$rating_etimes[0]->hour,-2,2);
-                        $minute=substr('0'.$rating_etimes[1]->minute,-2,2);
+                        $hour=substr('0'.$rating_etimes[0],-2,2);
+                        $minute=substr('0'.$rating_etimes[1],-2,2);
                         $rating_etime=$hour.':'.$minute.':59';
                     }else{
                         $hour=substr('0'.$rating_rating[1]->hour,-2,2);
