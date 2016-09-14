@@ -121,7 +121,7 @@
                             取消
                         </button>
                         <button type="submit" class="btn btn-primary">
-                            搜索
+                            统计
                         </button>
                     </div>
                 </form>
