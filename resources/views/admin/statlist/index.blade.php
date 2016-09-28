@@ -63,7 +63,7 @@
                     <tbody>
                     @foreach ($statlists as $statlist)
                         <tr>
-                            <td>{{ $statlist->adplaylist->d_date }}</td>
+                            <td>{{ date('Y-m-d', strtotime($statlist->adplaylist->d_date)) }}</td>
                             <td>{{ $statlist->adplaylist->b_time }}</td>
                             <th>{{ $statlist->adplaylist->fre->fre }}</th>
                             <th>{{ $statlist->adplaylist->number }}</th>
