@@ -34,7 +34,7 @@
             @include('admin.partials.errors')
             @include('admin.partials.success')
 
-            <table id="uploads-table" class="table table-striped table-bordered">
+            <table id="uploads-table" class="table table-striped table-bordered" data-order='[[ 3, "desc" ]]' data-page-length='25'>
                 <thead>
                     <tr>
                         <th>名字</th>
@@ -81,7 +81,7 @@
                             </a>
                         </td>
                         <td>{{ $file['mimeType'] or 'Unknown' }}</td>
-                        <td>{{ $file['modified']->format('j-M-y g:ia') }}</td>
+                        <td>{{ $file['modified']->format('Y-m-d H:i:s') }}</td>
                         <td>{{ human_filesize($file['size']) }}</td>
                         <td>
                             <button type="button" class="btn btn-xs btn-danger" onclick="delete_file('{{ $file['name'] }}')">

@@ -29,6 +29,7 @@ class UploadsManager
      *     'files' => array of file details on each file in folder
      * ]
      */
+
     public function folderInfo($folder)
     {
         $folder = $this->cleanFolder($folder);
@@ -47,6 +48,20 @@ class UploadsManager
         foreach ($this->disk->files($folder) as $path) {
             $files[] = $this->fileDetails($path);
         }
+
+
+        // if(is_array($files)){
+        //     foreach ($files as $row_array){
+        //         if(is_array($row_array)){
+        //             $key_array[] = $row_array['modified'];
+        //         }else{
+        //             return false;
+        //         }
+        //     }
+        // }else{
+        //     return false;
+        // }
+        // array_multisort($key_array,SORT_DESC,$files);
 
         return compact(
             'folder',

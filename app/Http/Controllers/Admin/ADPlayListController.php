@@ -155,6 +155,7 @@ class ADPlayListController extends Controller
     {
         $folder = 'adplaylist';
         $data = $this->manager->folderInfo($folder);
+
         return view('admin.upload.index', $data);
     }
 

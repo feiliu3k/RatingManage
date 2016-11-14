@@ -167,9 +167,6 @@ class RatingListController extends Controller
      */
     public function import(Request $request)
     {
-
-
-
         $filename=$request->get('rating_filename');
         $rt_id=$request->get('rt_id');
 
