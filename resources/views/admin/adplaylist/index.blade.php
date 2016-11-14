@@ -57,7 +57,7 @@
                     <tbody>
                     @foreach ($adplaylists as $adplaylist)
                         <tr>
-                            <td>{{ $adplaylist->d_date }}</td>
+                            <td>{{ date('Y-m-d',strtotime($adplaylist->d_date)) }}</td>
                             <td>{{ $adplaylist->b_time }}</td>
                             <th>{{ $adplaylist->fre->fre }}</th>
                             <th>{{ $adplaylist->number }}</th>

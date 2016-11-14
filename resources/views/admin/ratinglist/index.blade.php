@@ -57,7 +57,7 @@
                     @foreach ($ratings as $rating)
                         <tr>
                             <td>{{ $rating->rid }}</td>
-                            <td>{{ $rating->s_date }}</td>
+                            <td>{{ date('Y-m-d',strtotime($rating->s_date)) }}</td>
                             <th>{{ $rating->fre->fre }}</th>
                             <th>{{ $rating->b_time }}</th>
                             <th>{{ $rating->e_time }}</th>
