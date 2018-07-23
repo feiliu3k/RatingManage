@@ -181,9 +181,10 @@ class ADPlayListController extends Controller
                     $fre=Fre::where('fre',$adplaylist_data[3])->first();
                     $adplaylist=new ADPlayList;
                     $adplaylist->d_date=$adplaylist_data[1];
-                    $adplaylist_time = explode('\'',$adplaylist_data[2]);
+                    // $adplaylist_time = explode('\'',$adplaylist_data[2]);
 
-                    $adplaylist->b_time=$adplaylist_time[0].':'.$adplaylist_time[1];
+                    // $adplaylist->b_time=$adplaylist_time[0].':'.$adplaylist_time[1];
+                    $adplaylist->b_time= $adplaylist_data[2];
                     $adplaylist->f_id=$fre->id;
                     $adplaylist->number=$adplaylist_data[4];
                     $adplaylist->len=$adplaylist_data[5];
